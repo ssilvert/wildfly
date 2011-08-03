@@ -24,6 +24,7 @@ package org.jboss.as.web.deployment.jsf;
 
 import com.sun.faces.spi.AnnotationProvider;
 import java.lang.annotation.Annotation;
+import java.net.URI;
 import java.net.URL;
 import java.util.Map;
 import java.util.Set;
@@ -46,7 +47,8 @@ public class JandexAnnotationProvider extends AnnotationProvider {
         annotations = (Map<Class<? extends Annotation>, Set<Class<?>>>) servletContext.getAttribute(FACES_ANNOTATIONS);
     }
 
-    public Map<Class<? extends Annotation>, Set<Class<?>>> getAnnotatedClasses(final Set<URL> urls) {
-        return annotations; // TODO:  Should this be limited by URL
+    @Override
+    public Map<Class<? extends Annotation>, Set<Class<?>>> getAnnotatedClasses(Set<URI> set) {
+        return annotations; // TODO:  Should this be limited by URI
     }
 }
