@@ -155,8 +155,12 @@
             <maven-resource group="org.jboss.spec.javax.enterprise.deploy" artifact="jboss-jad-api_1.2_spec"/>
         </module-def>
 
-        <module-def name="javax.faces.api">
+ <!--       <module-def name="javax.faces.api">
             <maven-resource group="org.jboss.spec.javax.faces" artifact="jboss-jsf-api_2.0_spec"/>
+        </module-def> -->
+
+        <module-def name="javax.faces.api">
+            <maven-resource group="com.sun.faces" artifact="jsf-api"/>
         </module-def>
 
         <module-def name="javax.faces.api" slot="1.2">

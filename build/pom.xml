@@ -1232,12 +1232,17 @@
             <groupId>org.jboss.spec.javax.enterprise.deploy</groupId>
             <artifactId>jboss-jad-api_1.2_spec</artifactId>
         </dependency>
-
+<!--
         <dependency>
             <groupId>org.jboss.spec.javax.faces</groupId>
             <artifactId>jboss-jsf-api_2.0_spec</artifactId>
         </dependency>
-
+-->
+        <dependency>
+            <groupId>com.sun.faces</groupId>
+            <artifactId>jsf-api</artifactId>
+        </dependency>
+        
         <dependency>
             <groupId>org.jboss.spec.javax.interceptor</groupId>
             <artifactId>jboss-interceptors-api_1.1_spec</artifactId>
