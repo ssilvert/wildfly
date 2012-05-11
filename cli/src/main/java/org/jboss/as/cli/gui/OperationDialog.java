@@ -31,6 +31,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
 import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -41,6 +42,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 import org.jboss.as.cli.gui.ManagementModelNode.UserObject;
@@ -79,9 +81,14 @@ public class OperationDialog extends JDialog {
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout(10, 10));
 
-        JLabel opNameLabel = new JLabel("Params for " + opName + ":");
-        opNameLabel.setToolTipText(strDescription);
-        contentPane.add(opNameLabel, BorderLayout.NORTH);
+        JTextArea opDescription = new JTextArea(strDescription, (strDescription.length() / 40) + 1, 40);
+        opDescription.setLineWrap(true);
+        opDescription.setWrapStyleWord(true);
+        opDescription.setEnabled(false);
+        opDescription.setBackground(contentPane.getBackground());
+        opDescription.setForeground(contentPane.getForeground());
+        opDescription.setBorder(BorderFactory.createEmptyBorder(0,10,0,10));
+        contentPane.add(opDescription, BorderLayout.NORTH);
 
         contentPane.add(makeInputPanel(), BorderLayout.CENTER);
 

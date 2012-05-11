@@ -27,6 +27,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.text.JTextComponent;
 import org.jboss.as.cli.gui.ManagementModelNode.UserObject;
+import org.jboss.as.cli.gui.views.CreateViewDialog;
 import org.jboss.dmr.ModelNode;
 
 /**
@@ -60,6 +61,12 @@ public class OperationMenu extends JPopupMenu {
      */
     public void show(ManagementModelNode node, int x, int y) {
         removeAll();
+
+        if (node.isGeneric()) {
+            add(new CreateViewAction(node));
+            addSeparator();
+        }
+
         String addressPath = node.addressPath();
         try {
             ModelNode  opNames = executor.doCommand(addressPath + ":read-operation-names");
@@ -88,6 +95,26 @@ public class OperationMenu extends JPopupMenu {
             return executor.doCommand(addressPath + ":read-operation-description(name=\"" + name + "\")");
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    private class CreateViewAction extends AbstractAction {
+        private ManagementModelNode node;
+
+        public CreateViewAction(ManagementModelNode node) {
+            super("Create View");
+            this.node = node;
+            putValue(Action.SHORT_DESCRIPTION, "Create a customized view from the attributes of this node.");
+        }
+
+        public void actionPerformed(ActionEvent ae) {
+            try {
+                CreateViewDialog dialog = new CreateViewDialog(cliGuiCtx, node);
+                dialog.setLocationRelativeTo(cliGuiCtx.getMainWindow());
+                dialog.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
