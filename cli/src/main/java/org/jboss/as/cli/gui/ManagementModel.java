@@ -62,6 +62,7 @@ public class ManagementModel extends JPanel {
         tree.addTreeExpansionListener(new ManagementTreeExpansionListener((DefaultTreeModel) tree.getModel()));
         tree.addTreeSelectionListener(new ManagementTreeSelectionListener());
         tree.addMouseListener(new ManagementTreeMouseListener(tree));
+        tree.setShowsRootHandles(true);
         return tree;
     }
 
