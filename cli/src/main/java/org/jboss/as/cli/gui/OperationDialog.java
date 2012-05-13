@@ -31,7 +31,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
 import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -41,7 +40,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 import org.jboss.as.cli.gui.ManagementModelNode.UserObject;
@@ -80,14 +78,11 @@ public class OperationDialog extends JDialog {
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout(10, 10));
 
-        JTextArea opDescription = new JTextArea(strDescription, (strDescription.length() / 40) + 1, 40);
-        opDescription.setLineWrap(true);
-        opDescription.setWrapStyleWord(true);
-        opDescription.setEnabled(false);
-        opDescription.setBackground(contentPane.getBackground());
-        opDescription.setForeground(contentPane.getForeground());
-        opDescription.setBorder(BorderFactory.createEmptyBorder(0,10,0,10));
-        contentPane.add(opDescription, BorderLayout.NORTH);
+        // the html table allows word wrap and constant max width
+        JLabel opDescription = new JLabel("<html><table><td width='400'>" + strDescription + "</td></table></html>");
+        JPanel opDescPanel = new JPanel();
+        opDescPanel.add(opDescription);
+        contentPane.add(opDescPanel, BorderLayout.NORTH);
 
         contentPane.add(makeInputPanel(), BorderLayout.CENTER);
 
@@ -118,10 +113,10 @@ public class OperationDialog extends JDialog {
             props.add(new RequestProp("/" + usrObj.getName() + "=<name>/", "Resource name for the new " + usrObj.getName(), true, ModelType.STRING));
         }
 
-        if (opName.equals("write-attribute")) {
+        if (opName.equals("write-attribute") && node.isLeaf()) {
             ModelNode nameNode = requestProperties.get("name");
             nameNode.get("type").set(ModelType.UNDEFINED); // undefined type will display as uneditable String
-            UserObject usrObj = (UserObject)OperationDialog.this.node.getUserObject();
+            UserObject usrObj = (UserObject)node.getUserObject();
             ModelNode nameNodeValue = new ModelNode();
             nameNodeValue.set(usrObj.getName());
             props.add(new RequestProp("name", requestProperties.get("name"), nameNodeValue));

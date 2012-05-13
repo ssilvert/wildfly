@@ -32,7 +32,14 @@ import org.jboss.dmr.Property;
  */
 public class ManagementModelNode extends DefaultMutableTreeNode {
 
+    public static final ChildAcceptor DEFAULT_ACCEPTOR = new ChildAcceptor() {
+        public boolean accept(ManagementModelNode node) {
+            return true;
+        }
+    };
+
     private CliGuiContext cliGuiCtx;
+    private ChildAcceptor childAcceptor;
     private CommandExecutor executor;
     private boolean isLeaf = false;
     private boolean isGeneric = false;
@@ -40,20 +47,26 @@ public class ManagementModelNode extends DefaultMutableTreeNode {
     /**
      * Constructor for root node only.
      */
-    public ManagementModelNode(CliGuiContext cliGuiCtx) {
+    public ManagementModelNode(CliGuiContext cliGuiCtx, ChildAcceptor childAcceptor) {
         this.cliGuiCtx = cliGuiCtx;
+        this.childAcceptor = childAcceptor;
         this.executor = cliGuiCtx.getExecutor();
         this.isLeaf = false;
         setUserObject(new UserObject());
     }
 
-    private ManagementModelNode(CliGuiContext cliGuiCtx, UserObject userObject) {
+    private ManagementModelNode(CliGuiContext cliGuiCtx, UserObject userObject, ChildAcceptor childAcceptor) {
         this.cliGuiCtx = cliGuiCtx;
+        this.childAcceptor = childAcceptor;
         this.executor = cliGuiCtx.getExecutor();
         this.isLeaf = userObject.isLeaf;
         this.isGeneric = userObject.isGeneric;
         if (isGeneric) setAllowsChildren(false);
         setUserObject(userObject);
+    }
+
+    public interface ChildAcceptor {
+        boolean accept(ManagementModelNode node);
     }
 
     /**
@@ -77,21 +90,27 @@ public class ManagementModelNode extends DefaultMutableTreeNode {
                 Property prop = node.asProperty();
                 if (childrenTypes.contains(prop.getName())) { // resource node
                     if (hasGenericOperations(addressPath, prop.getName())) {
-                        add(new ManagementModelNode(cliGuiCtx, new UserObject(node, prop.getName())));
+                        addChild(new ManagementModelNode(cliGuiCtx, new UserObject(node, prop.getName()), childAcceptor));
                     }
                     if (prop.getValue().isDefined()) {
                         for (ModelNode innerNode : prop.getValue().asList()) {
                             UserObject usrObj = new UserObject(innerNode, prop.getName(), innerNode.asProperty().getName());
-                            add(new ManagementModelNode(cliGuiCtx, usrObj));
+                            addChild(new ManagementModelNode(cliGuiCtx, usrObj, childAcceptor));
                         }
                     }
                 } else { // attribute node
                     UserObject usrObj = new UserObject(node, resourceDesc, prop.getName(), prop.getValue().asString());
-                    add(new ManagementModelNode(cliGuiCtx, usrObj));
+                    addChild(new ManagementModelNode(cliGuiCtx, usrObj, childAcceptor));
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void addChild(ManagementModelNode node) {
+        if (this.childAcceptor.accept(node)) {
+            add(node);
         }
     }
 

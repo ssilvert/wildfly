@@ -46,6 +46,7 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import org.jboss.as.cli.CommandContext;
+import org.jboss.as.cli.gui.charts.NewChartAction;
 import org.jboss.as.cli.gui.metacommand.DeployAction;
 import org.jboss.as.cli.gui.metacommand.UndeployAction;
 
@@ -135,6 +136,7 @@ public class GuiMain {
     public static JMenuBar makeMenuBar(CliGuiContext cliGuiCtx) {
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(makeMetaCmdMenu(cliGuiCtx));
+        menuBar.add(makeViewsMenu(cliGuiCtx));
         JMenu lfMenu = makeLookAndFeelMenu(cliGuiCtx);
         if (lfMenu != null) menuBar.add(lfMenu);
         return menuBar;
@@ -143,7 +145,6 @@ public class GuiMain {
     private static JMenu makeLookAndFeelMenu(CliGuiContext cliGuiCtx) {
         final LookAndFeelInfo[] all = UIManager.getInstalledLookAndFeels();
         if (all == null) return null;
-
 
         final JMenu lfMenu = new JMenu("Look & Feel");
         lfMenu.setMnemonic(KeyEvent.VK_L);
@@ -180,10 +181,19 @@ public class GuiMain {
         }
     }
 
+    private static JMenu makeViewsMenu(CliGuiContext cliGuiCtx) {
+        JMenu viewsMenu = new JMenu("Views");
+        viewsMenu.setMnemonic(KeyEvent.VK_V);
+
+        JMenuItem newChart = new JMenuItem(new NewChartAction(cliGuiCtx));
+        viewsMenu.add(newChart);
+
+        return viewsMenu;
+    }
+
     private static JMenu makeMetaCmdMenu(CliGuiContext cliGuiCtx) {
         JMenu metaCmdMenu = new JMenu("Meta Commands");
         metaCmdMenu.setMnemonic(KeyEvent.VK_M);
-
 
         JMenuItem deploy = new JMenuItem(new DeployAction(cliGuiCtx));
         deploy.setMnemonic(KeyEvent.VK_D);

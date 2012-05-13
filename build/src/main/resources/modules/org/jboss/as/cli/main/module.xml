@@ -43,6 +43,7 @@
         <module name="org.jboss.sasl"/>
         <module name="org.jboss.staxmapper"/>
         <module name="org.jboss.vfs"/>
+        <module name="org.jfree.chart"/>
         <module name="javax.api"/>
     </dependencies>
 
