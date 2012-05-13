@@ -18,6 +18,7 @@
  */
 package org.jboss.as.cli.gui;
 
+import org.jboss.as.cli.gui.ManagementModelNode.ChildAcceptor;
 import org.jboss.as.cli.gui.charts.ChartMenu;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
@@ -46,22 +47,45 @@ public class ManagementModel extends JPanel {
                                              "A real-time graphable attribute is deonted with the \u2245 symbol. Right-click to monitor.</font></html>";
 
     private CliGuiContext cliGuiCtx;
+    private JTree tree;
 
-    public ManagementModel(CliGuiContext cliGuiCtx) {
+    private ManagementModel(CliGuiContext cliGuiCtx,
+                           String helpMessage) {
         this.cliGuiCtx = cliGuiCtx;
         setLayout(new BorderLayout(10,10));
-        add(new JLabel(SIMPLE_HELP), BorderLayout.NORTH);
-        add(makeTree(), BorderLayout.CENTER);
+        add(new JLabel(helpMessage), BorderLayout.NORTH);
     }
 
-    private JTree makeTree() {
-        ManagementModelNode root = new ManagementModelNode(cliGuiCtx);
+    public ManagementModel(CliGuiContext cliGuiCtx) {
+        this(cliGuiCtx, SIMPLE_HELP);
+        tree = makeTree(ManagementModelNode.DEFAULT_ACCEPTOR);
+        tree.addTreeSelectionListener(new ManagementTreeSelectionListener());
+        tree.addMouseListener(new ManagementTreeMouseListener(tree));
+        add(tree, BorderLayout.CENTER);
+    }
+
+    public ManagementModel(CliGuiContext cliGuiCtx,
+                           String helpMessage,
+                           ChildAcceptor acceptor,
+                           TreeSelectionListener treeSelectionListener,
+                           MouseAdapter mouseAdapter) {
+        this(cliGuiCtx, helpMessage);
+        tree = makeTree(acceptor);
+        tree.addTreeSelectionListener(treeSelectionListener);
+        tree.addMouseListener(mouseAdapter);
+        add(tree, BorderLayout.CENTER);
+    }
+
+    public JTree getTree() {
+        return this.tree;
+    }
+
+    private JTree makeTree(ChildAcceptor acceptor) {
+        ManagementModelNode root = new ManagementModelNode(cliGuiCtx, acceptor);
         root.explore();
         JTree tree = new CommandBuilderTree(cliGuiCtx, new DefaultTreeModel(root));
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.addTreeExpansionListener(new ManagementTreeExpansionListener((DefaultTreeModel) tree.getModel()));
-        tree.addTreeSelectionListener(new ManagementTreeSelectionListener());
-        tree.addMouseListener(new ManagementTreeMouseListener(tree));
         tree.setShowsRootHandles(true);
         return tree;
     }
