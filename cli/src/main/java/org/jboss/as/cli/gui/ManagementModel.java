@@ -18,6 +18,7 @@
  */
 package org.jboss.as.cli.gui;
 
+import javax.swing.JScrollPane;
 import org.jboss.as.cli.gui.ManagementModelNode.ChildAcceptor;
 import org.jboss.as.cli.gui.charts.ChartMenu;
 import java.awt.BorderLayout;
@@ -61,7 +62,7 @@ public class ManagementModel extends JPanel {
         tree = makeTree(ManagementModelNode.DEFAULT_ACCEPTOR);
         tree.addTreeSelectionListener(new ManagementTreeSelectionListener());
         tree.addMouseListener(new ManagementTreeMouseListener(tree));
-        add(tree, BorderLayout.CENTER);
+        add(new JScrollPane(tree), BorderLayout.CENTER);
     }
 
     public ManagementModel(CliGuiContext cliGuiCtx,
@@ -73,7 +74,7 @@ public class ManagementModel extends JPanel {
         tree = makeTree(acceptor);
         tree.addTreeSelectionListener(treeSelectionListener);
         tree.addMouseListener(mouseAdapter);
-        add(tree, BorderLayout.CENTER);
+        add(new JScrollPane(tree), BorderLayout.CENTER);
     }
 
     public JTree getTree() {
