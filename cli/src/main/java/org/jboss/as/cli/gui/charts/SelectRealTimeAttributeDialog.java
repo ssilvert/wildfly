@@ -39,6 +39,9 @@ import org.jboss.as.cli.gui.ManagementModelNode.UserObject;
 import org.jboss.dmr.ModelNode;
 
 /**
+ * This dialog presents a pared-down version of the management tree filtering out
+ * nodes that can not contain real time attributes.  Once the user has selected a
+ * real time attribute it creates a graph for it.
  *
  * @author Stan Silvert ssilvert@redhat.com (C) 2012 Red Hat Inc.
  */

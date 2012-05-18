@@ -27,7 +27,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.text.JTextComponent;
 import org.jboss.as.cli.gui.ManagementModelNode.UserObject;
-import org.jboss.as.cli.gui.views.CreateViewDialog;
+import org.jboss.as.cli.gui.tables.CreateViewDialog;
 import org.jboss.dmr.ModelNode;
 
 /**

@@ -65,6 +65,10 @@ public class ManagementModelNode extends DefaultMutableTreeNode {
         setUserObject(userObject);
     }
 
+    /**
+     * A ChildAcceptor acts as a filter for nodes that should not be added to
+     * the tree.
+     */
     public interface ChildAcceptor {
         boolean accept(ManagementModelNode node);
     }

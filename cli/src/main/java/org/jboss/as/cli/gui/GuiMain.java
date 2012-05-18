@@ -49,6 +49,7 @@ import org.jboss.as.cli.CommandContext;
 import org.jboss.as.cli.gui.charts.NewChartAction;
 import org.jboss.as.cli.gui.metacommand.DeployAction;
 import org.jboss.as.cli.gui.metacommand.UndeployAction;
+import org.jboss.as.cli.gui.tables.NewTableAction;
 
 /**
  * Static main class for the GUI.
@@ -188,6 +189,9 @@ public class GuiMain {
         JMenuItem newChart = new JMenuItem(new NewChartAction(cliGuiCtx));
         viewsMenu.add(newChart);
 
+        JMenuItem newTable = new JMenuItem(new NewTableAction(cliGuiCtx));
+        viewsMenu.add(newTable);
+
         return viewsMenu;
     }
 
@@ -208,7 +212,7 @@ public class GuiMain {
 
     private static JTabbedPane makeTabbedPane(CliGuiContext cliGuiCtx, JPanel output) {
         JTabbedPane tabs = new JTabbedPane();
-        tabs.addTab("Command Builder", new JScrollPane(new ManagementModel(cliGuiCtx)));
+        tabs.addTab("Command Builder", new ManagementModel(cliGuiCtx));
         tabs.addTab("Output", output);
         return tabs;
     }

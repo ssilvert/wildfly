@@ -44,6 +44,7 @@ import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 import org.jboss.as.cli.gui.ManagementModelNode.UserObject;
 import org.jboss.as.cli.gui.component.ListEditor;
+import org.jboss.as.cli.gui.component.WordWrapLabel;
 import org.jboss.dmr.ModelNode;
 import org.jboss.dmr.ModelType;
 import org.jboss.dmr.Property;
@@ -79,7 +80,7 @@ public class OperationDialog extends JDialog {
         contentPane.setLayout(new BorderLayout(10, 10));
 
         // the html table allows word wrap and constant max width
-        JLabel opDescription = new JLabel("<html><table><td width='400'>" + strDescription + "</td></table></html>");
+        JLabel opDescription = new WordWrapLabel(strDescription, 400);
         JPanel opDescPanel = new JPanel();
         opDescPanel.add(opDescription);
         contentPane.add(opDescPanel, BorderLayout.NORTH);
