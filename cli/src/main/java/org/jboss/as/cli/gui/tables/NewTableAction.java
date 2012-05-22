@@ -17,7 +17,6 @@
  * MA  02110-1301, USA.
  */
 package org.jboss.as.cli.gui.tables;
-import org.jboss.as.cli.gui.ManagementModelNode;
 
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;

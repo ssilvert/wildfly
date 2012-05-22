@@ -16,35 +16,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.jboss.as.cli.gui.tables;
+package org.jboss.as.cli.gui;
 
-import java.awt.BorderLayout;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import org.jboss.as.cli.gui.CliGuiContext;
-import org.jboss.as.cli.gui.ManagementModelNode;
+import javax.swing.JTabbedPane;
 
 /**
  *
  * @author Stan Silvert ssilvert@redhat.com (C) 2012 Red Hat Inc.
  */
-public class TableView extends JPanel {
+public class ViewManager {
+    private CliGuiContext cliGuiCtx;
 
-    private String tableName;
+    private List<JPanel> views = new ArrayList<JPanel>();
 
-    private ReadAttributesTableModel tableModel;
-    private JTable table = new JTable();
+    public ViewManager(CliGuiContext cliGuiCtx) {
+        this.cliGuiCtx = cliGuiCtx;
+    }
 
-    public TableView(CliGuiContext cliGuiCtx, String tableName, ManagementModelNode root, List<AttributeType> attrs) throws Exception {
-        this.tableName = tableName;
-        table.setAutoCreateRowSorter(true);
-        setLayout(new BorderLayout());
+    public void addView(String name, JPanel panel) {
+        JTabbedPane tabs = cliGuiCtx.getTabs();
+        int tabCount = tabs.getComponentCount();
 
-        JScrollPane scroller = new JScrollPane(table);
-        add(scroller, BorderLayout.CENTER);
-        this.tableModel = new ReadAttributesTableModel(cliGuiCtx, root, attrs);
-        this.table.setModel(tableModel);
+        tabs.add(name, panel);
+        tabs.setSelectedIndex(tabCount);
+        this.views.add(panel);
     }
 }

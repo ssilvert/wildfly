@@ -62,7 +62,7 @@ public class CreateViewDialog extends JDialog {
        // contentPane.add(opDescription, BorderLayout.NORTH);
 
         JComponent tree = makeTree();
-        TableView tableView = new TableView(cliGuiCtx, node);
+        TableView tableView = null; //new TableView(cliGuiCtx, node);
         JSplitPane splitter = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tree, tableView);
 
         contentPane.add(splitter, BorderLayout.CENTER);

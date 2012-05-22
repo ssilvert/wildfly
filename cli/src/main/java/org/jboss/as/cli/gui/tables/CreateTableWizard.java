@@ -28,6 +28,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import org.jboss.as.cli.gui.CliGuiContext;
+import org.jboss.as.cli.gui.ViewManager;
 
 /**
  * This dialog presents a pared-down version of the management tree filtering out
@@ -45,21 +46,27 @@ public class CreateTableWizard extends JDialog implements ItemSelectionListener 
     private JButton finishButton = new JButton("Finish");
     private JButton helpButton = new JButton("Help");
 
-    private SelectFirstColumnPanel panelOne;
-    private SelectAttributesPanel panelTwo;
+    private SelectViewNamePanel panelOne;
+    private SelectFirstColumnPanel panelTwo;
+    private SelectAttributesPanel panelThree;
 
     private JPanel currentPanel;
+
+    private CliGuiContext cliGuiCtx;
 
 
     public CreateTableWizard(CliGuiContext cliGuiCtx) {
         super(cliGuiCtx.getMainWindow(), "Create Table", Dialog.ModalityType.APPLICATION_MODAL);
+        this.cliGuiCtx = cliGuiCtx;
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         contentPane.setLayout(new BorderLayout());
 
-        panelOne = new SelectFirstColumnPanel(cliGuiCtx, this);
-        panelTwo = new SelectAttributesPanel(cliGuiCtx, this);
+        panelOne = new SelectViewNamePanel(this);
+        panelTwo = new SelectFirstColumnPanel(cliGuiCtx, this);
+        panelThree = new SelectAttributesPanel(cliGuiCtx, this);
+
         currentPanel = panelOne;
 
         contentPane.add(panelOne, BorderLayout.CENTER);
@@ -77,9 +84,16 @@ public class CreateTableWizard extends JDialog implements ItemSelectionListener 
             previousButton.setEnabled(false);
             nextButton.setEnabled(true);
             finishButton.setEnabled(false);
+            return;
+        }
+
+        if (currentPanel == panelTwo) {
+            previousButton.setEnabled(true);
+            nextButton.setEnabled(true);
+            finishButton.setEnabled(false);
             helpButton.setText("Help");
 
-            panelTwo.setSelectedNode(panelOne.getSelectedNode());
+            panelThree.setSelectedNode(panelTwo.getSelectedNode());
 
             return;
         }
@@ -93,6 +107,12 @@ public class CreateTableWizard extends JDialog implements ItemSelectionListener 
 
         if (currentPanel == panelOne) {
             previousButton.setEnabled(false);
+            nextButton.setEnabled(false);
+            return;
+        }
+
+        if (currentPanel == panelTwo) {
+            previousButton.setEnabled(true);
             nextButton.setEnabled(false);
             return;
         }
@@ -112,34 +132,56 @@ public class CreateTableWizard extends JDialog implements ItemSelectionListener 
         previousButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 nextButton.setEnabled(true);
-                previousButton.setEnabled(false);
-                helpButton.setEnabled(false);
                 finishButton.setEnabled(false);
 
-                contentPane.remove(panelTwo);
-                contentPane.add(panelOne, BorderLayout.CENTER);
-                contentPane.paintAll(contentPane.getGraphics());
+                if (currentPanel == panelTwo) {
+                    currentPanel = panelOne;
+                    previousButton.setEnabled(false);
+                    helpButton.setVisible(false);
+                    contentPane.remove(panelTwo);
+                    contentPane.add(panelOne, BorderLayout.CENTER);
+                }
 
-                currentPanel = panelOne;
+                if (currentPanel == panelThree) {
+                    currentPanel = panelTwo;
+                    helpButton.setVisible(false);
+                    contentPane.remove(panelThree);
+                    contentPane.add(panelTwo, BorderLayout.CENTER);
+                }
+
+                contentPane.paintAll(contentPane.getGraphics());
             }
         });
 
         nextButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                nextButton.setEnabled(false);
-                previousButton.setEnabled(true);
-                helpButton.setEnabled(true);
-                finishButton.setEnabled(!panelTwo.noAttributesSelected());
+                if (currentPanel == panelTwo) {
+                    currentPanel = panelThree;
+                    nextButton.setEnabled(false);
+                    previousButton.setEnabled(true);
+                    helpButton.setVisible(true);
+                    finishButton.setEnabled(!panelThree.noAttributesSelected());
 
-                contentPane.remove(panelOne);
-                contentPane.add(panelTwo, BorderLayout.CENTER);
+                    contentPane.remove(panelTwo);
+                    contentPane.add(panelThree, BorderLayout.CENTER);
+                }
+
+                if (currentPanel == panelOne) {
+                    currentPanel = panelTwo;
+                    nextButton.setEnabled(panelTwo.getSelectedNode() != null);
+                    previousButton.setEnabled(true);
+                    helpButton.setVisible(false);
+                    finishButton.setEnabled(false);
+
+                    contentPane.remove(panelOne);
+                    contentPane.add(panelTwo, BorderLayout.CENTER);
+                }
+
                 contentPane.paintAll(contentPane.getGraphics());
-
-                currentPanel = panelTwo;
             }
         });
 
-        helpButton.setEnabled(false);
+        helpButton.setVisible(false);
         helpButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (helpButton.getText().equals("Help")) {
@@ -148,7 +190,25 @@ public class CreateTableWizard extends JDialog implements ItemSelectionListener 
                     helpButton.setText("Help");
                 }
 
-                panelTwo.toggleHelpText();
+                panelThree.toggleHelpText();
+            }
+        });
+
+        finishButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ViewManager viewMgr = cliGuiCtx.getViewManager();
+
+                try {
+                    TableView tableView = new TableView(cliGuiCtx,
+                                                        panelOne.getName(),
+                                                        panelTwo.getSelectedNode(),
+                                                        panelThree.getSelectedAttributes());
+                    viewMgr.addView(panelOne.getViewName(), tableView);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+                CreateTableWizard.this.dispose();
             }
         });
 
