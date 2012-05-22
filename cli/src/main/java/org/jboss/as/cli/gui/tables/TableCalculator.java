@@ -19,12 +19,7 @@
 package org.jboss.as.cli.gui.tables;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
-import org.jboss.as.cli.CommandFormatException;
-import org.jboss.as.cli.gui.ManagementModelNode;
 import org.jboss.dmr.ModelNode;
 import org.jboss.dmr.ModelType;
 import org.jboss.dmr.Property;
@@ -39,116 +34,177 @@ class TableCalculator {
     // The address of everything before the AttributeType's path
     private List<ModelNode> baseAddress;
 
+    private List<Column> addressColumns;
+
+    // attribute columns
     private List<AttributeType> attributes;
 
-    private LinkedHashSet<String> uniquePaths = new LinkedHashSet<String>();
+    private List<ModelNode> rows;
 
-    private List<String> addrColumnNames;
-
-    private List<String> columnNames;
-
-    private Map<String, Integer> columnNumbers = new HashMap<String, Integer>();
-
-    private List<ModelNode> rows = new ArrayList<ModelNode>();
-
-    public TableCalculator(ManagementModelNode node, List<AttributeType> attributes) throws CommandFormatException {
-        this.baseAddress = node.getParentAddress();
+    public TableCalculator(List<ModelNode> baseAddress, List<AttributeType> attributes) {
+        this.baseAddress = baseAddress;
         this.attributes = attributes;
-
-        for (AttributeType attrType : attributes) {
-            uniquePaths.add(attrType.getPath());
-        }
-
-        // linkedColNames = unique paths + attribute names
-        LinkedHashSet<String> linkedColNames = new LinkedHashSet<String>();
-        for (String path : uniquePaths) {
-            for (String pathElement : path.split("/")) { // TODO: need to check for escaped '/' in path?
-                if (!pathElement.equals("")) linkedColNames.add(pathElement);
-            }
-        }
-
-        addrColumnNames = new ArrayList<String>(linkedColNames);
-
-        for (AttributeType attrType : attributes) {
-            linkedColNames.add(attrType.getName());
-        }
-
-        columnNames = new ArrayList<String>(linkedColNames);
-
-        for (int i=0; i < columnNames.size(); i++) {
-            columnNumbers.put(columnNames.get(i), i);
-        }
-
-        System.out.println("empty address =");
-        for (ModelNode addr : makeEmptyAddress()) {
-            System.out.println(addr.toString());
-        }
     }
 
     public int getColumnCount() {
-        if (columnNames == null) return 0;
-        return columnNames.size();
+        if (this.addressColumns == null) return 0;
+        if (this.attributes == null) return 0;
+        return this.addressColumns.size() + this.attributes.size();
     }
 
     public int getRowCount() {
-        if (rows == null) return 0;
-        return rows.size();
+        if (this.rows == null) return 0;
+        return this.rows.size();
     }
 
     public String getColumnName(int column) {
-        return columnNames.get(column);
-    }
-
-    public int getColumnNumber(String columnName) {
-        return columnNumbers.get(columnName);
-    }
-
-    public ModelNode getValueAt(int row, int column) {
-        ModelNode rowNode = rows.get(row);
-        String colName = getColumnName(column);
-
-        if (isAddressColumn(column)) {
-            colName = colName.substring(0, colName.indexOf('='));
-            ModelNode addrMember = findAddressMember(colName, rowNode.get("address").asList());
-            return addrMember.get(colName);
+        if (column < addressColumns.size()) {
+            return addressColumns.get(column).getName();
+        } else {
+            return attributes.get(column - addressColumns.size()).getName();
         }
-
-        return rowNode.get(colName);
     }
 
-    private boolean isAddressColumn(int columnNumber) {
-        return columnNumber < addrColumnNames.size();
+    public ModelNode getValueAt(int rowNum, int column) {
+        ModelNode row = rows.get(rowNum);
+        if (column < addressColumns.size()) {
+            return getAddressColumnValue(column, row);
+        } else {
+            return row.get(getColumnName(column));
+        }
+    }
+
+    private ModelNode getAddressColumnValue(int column, ModelNode row) {
+        Column addrColumn = this.addressColumns.get(column);
+        List<ModelNode> rowAddress = row.get("address").asList();
+        int addrElementPosition = addrColumn.getResourceCount() - 1;
+
+        // account for values that should be empty
+        if (column > rowAddress.size() - 1) return new ModelNode();
+        Property addrElement = rowAddress.get(addrElementPosition).asProperty();
+        if (!addrElement.getName().equals(addrColumn.getName())) return new ModelNode();
+
+        return rowAddress.get(addrElementPosition).asProperty().getValue();
     }
 
     void parseRows(ModelNode result) {
-        int attrIndex = 0;
-        System.out.println("empty address=");
-        System.out.println(makeEmptyAddress());
-        for (Property step : result.get("result").asPropertyList()) {
+        this.rows = new ArrayList<ModelNode>();
+        this.addressColumns = new ArrayList<Column>();
+
+        List<Property> steps = result.get("result").asPropertyList();
+        for (int i = 0; i < steps.size(); i++) {
+            Property step = steps.get(i);
+            AttributeType attrType = attributes.get(i);
             if (step.getValue().get("result").getType() != ModelType.LIST) {
-                processRow(attrIndex, step.getValue());
+                ModelNode row = step.getValue();
+                row.get("address").set(attrType.getAddress());
+                parseRow(attrType, row);
             } else {
-                for (ModelNode readAttrResult : step.getValue().get("result").asList()) {
-                    processRow(attrIndex, readAttrResult);
+                for (ModelNode row : step.getValue().get("result").asList()) {
+                    parseRow(attrType, row);
                 }
             }
-
-            attrIndex++;
         }
 
+        this.dumpRows();
+        dumpAddressColumns();
     }
 
-    private void processRow(int attrIndex, ModelNode readAttrResult) {
-        AttributeType attr = attributes.get(attrIndex);
-        ModelNode row;
-        if (readAttrResult.get("address").isDefined()) {
-            List<ModelNode> compAddr = makeComparableAddress(readAttrResult.get("address").asList());
-            row = findRowForAddress(compAddr);
-        } else {
-            row = findRowForAddress(makeEmptyAddress());
+    private void parseRow(AttributeType attrType, ModelNode stepRow) {
+        if (isAddressUnique(stepRow.get("address"))) {
+            addRow(stepRow);
         }
 
-        row.get(attr.getName()).set(readAttrResult.get("result"));
+        ModelNode permanentRow = getPermanentRow(stepRow);
+        permanentRow.get(attrType.getName()).set(stepRow.get("result"));
+    }
+
+    private boolean isAddressUnique(ModelNode address) {
+        for (ModelNode row : rows) {
+            if (row.get("address").equals(address)) return false;
+        }
+
+        return true;
+    }
+
+    private void addRow(ModelNode row) {
+        ModelNode newRow = new ModelNode();
+        newRow.get("address").set(row.get("address").clone());
+        rows.add(newRow);
+        addAddressColumns(newRow);
+    }
+
+    // If the new row also has a new address path, add it
+    private void addAddressColumns(ModelNode newRow) {
+        String resourcePath = "/";
+        List<ModelNode> addressElements = newRow.get("address").asList();
+        for (int i=0; i < addressElements.size(); i++ ) {
+            String resource = addressElements.get(i).asProperty().getName();
+            resourcePath += resource + "/";
+
+            if (i < baseAddress.size() - 1) continue;
+
+            Column newColumn = new Column(resourcePath, resource, i + 1);
+            addAddressColumn(newColumn);
+        }
+    }
+
+    // if the column does not already exist, add it
+    private void addAddressColumn(Column newColumn) {
+        for (Column column : this.addressColumns) {
+            if (column.equals(newColumn)) return;
+        }
+
+        this.addressColumns.add(newColumn);
+    }
+
+    // finds the permanent permanentRow with the same address as the stepRow
+    private ModelNode getPermanentRow(ModelNode stepRow) {
+        for (ModelNode permanentRow : rows) {
+            if (permanentRow.get("address").equals(stepRow.get("address"))) {
+                return permanentRow;
+            }
+        }
+
+        throw new IllegalArgumentException("Row not found for stepRow address=" + stepRow.get("address"));
+    }
+
+    private class Column {
+        private String resourcePath;
+        private String name;
+        private int resourceCount; // the number of resources in the resourcePath
+
+        public Column(String resourcePath, String name, int resourceCount) {
+            this.resourcePath = resourcePath;
+            this.name = name;
+            this.resourceCount = resourceCount;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public String getResourcePath() {
+            return this.resourcePath;
+        }
+
+        public int getResourceCount() {
+            return this.resourceCount;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (!(obj instanceof Column)) return false;
+            Column comparedColumn = (Column)obj;
+            return this.resourcePath.equals(comparedColumn.resourcePath);
+        }
+
+        @Override
+        public int hashCode() {
+            return this.resourcePath.hashCode();
+        }
+
     }
 
     void dumpRows() {
@@ -159,71 +215,14 @@ class TableCalculator {
         }
     }
 
-    // Use the addrList to fill in the values of the empty address
-    // This makes an address that can be compared for findRowForAddress()
-    private List<ModelNode> makeComparableAddress(List<ModelNode> addrList) {
-        List<ModelNode> comparableAddress = makeEmptyAddress();
-        for (ModelNode addr : comparableAddress) {
-            String address = addr.asProperty().getName();
-            ModelNode valueFromResponse = findAddressMember(address, addrList);
-            if (valueFromResponse != null) {
-                findAddressMember(address, comparableAddress).get(address).set(valueFromResponse.get(address));
-            }
+    void dumpAddressColumns() {
+        System.out.println("Column Dump:");
+        for (int i=0; i < addressColumns.size(); i++) {
+            System.out.println("addr column " + i);
+            System.out.println(addressColumns.get(i).getName());
+            System.out.println(addressColumns.get(i).getResourcePath());
+            System.out.println("resource count=" + addressColumns.get(i).getResourceCount());
         }
-
-        return comparableAddress;
-    }
-
-    private ModelNode findAddressMember(String address, List<ModelNode> addrList) {
-        for (ModelNode addr : addrList) {
-            if (addr.has(address)) return addr;
-        }
-
-        return null;
-    }
-
-    // creates an address list with empty Strings for all unknown address values
-    private List<ModelNode> makeEmptyAddress() {
-        ModelNode address = new ModelNode();
-
-        for (String colName : addrColumnNames) {
-            ModelNode colAddress = new ModelNode();
-            if (colName.endsWith("=*")) {
-                colAddress.get(colName.substring(0, colName.indexOf("=*"))); // set as undefined
-            } else {
-                colAddress.get(colName.substring(0, colName.indexOf('='))).set(colName.substring(colName.indexOf('=') + 1));
-            }
-            address.add(colAddress);
-        }
-
-        return address.asList();
-    }
-
-    private ModelNode findRowForAddress(List<ModelNode> address) {
-        for (ModelNode row : rows) {
-            List<ModelNode> rowAddress = row.get("address").asList();
-            if (isAddressEqual(rowAddress, address)) return row;
-        }
-
-        ModelNode newRow = new ModelNode();
-        newRow.get("address").set(address);
-        rows.add(newRow);
-        return newRow;
-    }
-
-    private boolean isAddressEqual(List<ModelNode> addr1, List<ModelNode> addr2) {
-        if (addr1.size() != addr2.size()) throw new IllegalArgumentException("addr1 and addr2 must be the same size.");
-
-        for (int i=0; i < addr1.size(); i++) {
-            Property addrElement1 = addr1.get(i).asProperty();
-            Property addrElement2 = addr2.get(i).asProperty();
-            if (!(addrElement1.getName().equals(addrElement2.getName()) &&
-                  addrElement1.getValue().asString().equals(addrElement2.getValue().asString()))) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
 }
