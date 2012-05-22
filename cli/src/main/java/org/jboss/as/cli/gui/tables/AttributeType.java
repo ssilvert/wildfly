@@ -40,6 +40,22 @@ public class AttributeType {
         return value.get("description").asString();
     }
 
+    public String getName() {
+        return attrib.getName();
+    }
+
+    public String getPath() {
+        return this.path;
+    }
+
+    public String makeReadCommand() {
+        String name = getName();
+        String command = toString();
+        command = command.substring(0, command.lastIndexOf(name));
+        command += ":read-attribute(name=" + name + ")";
+        return command;
+    }
+
     @Override
     public String toString() {
         return path + attrib.getName();

@@ -20,6 +20,7 @@ package org.jboss.as.cli.gui;
 
 import java.awt.Cursor;
 import java.io.IOException;
+import java.util.List;
 import org.jboss.as.cli.CommandContext;
 import org.jboss.as.cli.CommandFormatException;
 import org.jboss.as.controller.client.ModelControllerClient;
@@ -55,10 +56,36 @@ public class CommandExecutor {
         return execute(command, request);
     }
 
+    /**
+     * Used when you only care about what the command would look like.
+     * @param command
+     * @return
+     * @throws CommandFormatException
+     */
+    public synchronized ModelNode buildRequest(String command) throws CommandFormatException {
+        return cmdCtx.buildRequest(command);
+    }
+
     public synchronized Response doCommandFullResponse(String command) throws CommandFormatException, IOException {
         ModelNode request = cmdCtx.buildRequest(command);
         ModelNode response = execute(command, request);
         return new Response(command, request, response);
+    }
+
+    public synchronized ModelNode doCompositeCommand(List<String> commands, boolean rollbackOnFailure) throws CommandFormatException, IOException {
+        ModelNode composite = new ModelNode();
+        composite.get("operation").set("composite");
+        composite.get("address").setEmptyList();
+        ModelNode steps = new ModelNode();
+        for (String command : commands) {
+            ModelNode request = cmdCtx.buildRequest(command);
+            steps.add(request);
+        }
+        composite.get("steps").set(steps);
+        composite.get("operation-headers", "rollback-on-runtime-failure").set(rollbackOnFailure);
+        System.out.println("composite=");
+        System.out.println(composite.toString());
+        return client.execute(composite);
     }
 
     private ModelNode execute(String command, ModelNode request) throws IOException {

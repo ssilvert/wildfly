@@ -63,8 +63,8 @@ public class OperationMenu extends JPopupMenu {
         removeAll();
 
         if (node.isGeneric()) {
-            add(new CreateViewAction(node));
-            addSeparator();
+//            add(new CreateViewAction(node));
+//            addSeparator();
         }
 
         String addressPath = node.addressPath();
@@ -97,7 +97,7 @@ public class OperationMenu extends JPopupMenu {
             return null;
         }
     }
-
+/*
     private class CreateViewAction extends AbstractAction {
         private ManagementModelNode node;
 
@@ -117,7 +117,7 @@ public class OperationMenu extends JPopupMenu {
             }
         }
     }
-
+*/
     /**
      * Action for a menu selection.  For operations with params, display an Operation Dialog.  For operations
      * without params, just construct the operation and set the command line.

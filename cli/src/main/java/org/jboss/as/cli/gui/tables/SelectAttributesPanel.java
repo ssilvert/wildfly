@@ -47,7 +47,7 @@ public class SelectAttributesPanel extends JPanel {
     private ManagementModelNode selectedNode;
     private ItemSelectionListener wizard;
 
-    private WordWrapLabel selectedNodeLabel = new WordWrapLabel("<font size='4'>" + SELECT_ATTRS_HELP + "<b>" + "foo" + "</b></font>", 500);
+    private WordWrapLabel selectedNodeLabel = new WordWrapLabel("", 500);
 
     private List<AttributeCheckBox> attributeCheckBoxes;
     private List<WordWrapLabel> helpTextLabels;
@@ -64,6 +64,14 @@ public class SelectAttributesPanel extends JPanel {
         add(selectedNodeLabel, BorderLayout.NORTH);
 
         add(scroller, BorderLayout.CENTER);
+    }
+
+    public List<AttributeType> getSelectedAttributes() {
+        List<AttributeType> attrList = new ArrayList<AttributeType>();
+        for (AttributeCheckBox attrCheckBox : attributeCheckBoxes) {
+            if (attrCheckBox.isSelected()) attrList.add(attrCheckBox.getAttrType());
+        }
+        return attrList;
     }
 
     public void setSelectedNode(ManagementModelNode selectedNode) {
@@ -165,23 +173,7 @@ public class SelectAttributesPanel extends JPanel {
     private void readAttributes(List<AttributeType> attribList, String basePath, ModelNode results) {
         if (!results.get("attributes").isDefined()) return;
         for (Property attribute : results.get("attributes").asPropertyList()) {
-            // simplets case /deployment=*/runtime-name
-            if (!attribute.getValue().get("value-type").isDefined()) {
-                attribList.add(new AttributeType(basePath, attribute));
-                continue;
-            }
-
-            // example is /extension=*/subsystem=*/xml-namespaces
-            if (attribute.getValue().get("value-type").getType() == ModelType.TYPE) {
-                attribList.add(new AttributeType(basePath, attribute));
-                continue;
-            }
-
-            // value-type is an object instead of a ModelType
-            // example is /deployment=*/content
-            for (Property valueTypeProp : attribute.getValue().get("value-type").asPropertyList()) {
-                attribList.add(new AttributeType(basePath + attribute.getName() + "=", valueTypeProp));
-            }
+            attribList.add(new AttributeType(basePath, attribute));
         }
     }
 

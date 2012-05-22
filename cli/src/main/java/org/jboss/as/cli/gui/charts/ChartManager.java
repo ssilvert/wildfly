@@ -51,11 +51,7 @@ public class ChartManager {
     }
 
     public void addChart(JBossChart jbossChart) {
-        JTabbedPane tabs = cliGuiCtx.getTabs();
-        int tabCount = tabs.getComponentCount();
-
-        tabs.add(jbossChart.getName(), makeTabPanel(jbossChart));
-        tabs.setSelectedIndex(tabCount);
+        cliGuiCtx.getViewManager().addView(jbossChart.getName(), makeTabPanel(jbossChart));
         this.chartList.add(jbossChart);
 
         if (!cliGuiCtx.isEmbedded() && (chartList.size() == 1)) {

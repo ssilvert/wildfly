@@ -39,6 +39,7 @@ public class CliGuiContext {
     private CommandLine cmdLine;
     private boolean isStandalone;
     private ChartManager chartManager = new ChartManager(this);
+    private ViewManager viewManager = new ViewManager(this);
 
     CliGuiContext(boolean isEmbedded) {
         this.isEmbedded = isEmbedded;
@@ -125,5 +126,9 @@ public class CliGuiContext {
 
     public ChartManager getChartManager() {
         return this.chartManager;
+    }
+
+    public ViewManager getViewManager() {
+        return this.viewManager;
     }
 }

@@ -21,6 +21,7 @@ package org.jboss.as.cli.gui;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
+import org.jboss.as.cli.CommandFormatException;
 import org.jboss.dmr.ModelNode;
 import org.jboss.dmr.ModelType;
 import org.jboss.dmr.Property;
@@ -136,6 +137,22 @@ public class ManagementModelNode extends DefaultMutableTreeNode {
             childrenTypes.add(type.asString());
         }
         return childrenTypes;
+    }
+
+    /**
+     * Returns a List<ModelNode> with the parent's address.
+     *
+     * @return a List<ModelNode> with the parent's address.
+     */
+    public List<ModelNode> getParentAddress() throws CommandFormatException {
+        if (this.isRoot()) return new ArrayList<ModelNode>();
+
+        ManagementModelNode parentNode = (ManagementModelNode)getParent();
+        String parentPath = parentNode.addressPath();
+
+        // parse :read-operation-names just to get the properly-formatted address
+        ModelNode request = cliGuiCtx.getExecutor().buildRequest(parentPath + ":read-operation-names");
+        return request.get("address").asList();
     }
 
     /**
