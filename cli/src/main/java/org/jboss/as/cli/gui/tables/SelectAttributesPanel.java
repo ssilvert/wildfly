@@ -32,7 +32,6 @@ import org.jboss.as.cli.gui.CliGuiContext;
 import org.jboss.as.cli.gui.ManagementModelNode;
 import org.jboss.as.cli.gui.component.WordWrapLabel;
 import org.jboss.dmr.ModelNode;
-import org.jboss.dmr.ModelType;
 import org.jboss.dmr.Property;
 
 /**
@@ -173,7 +172,7 @@ public class SelectAttributesPanel extends JPanel {
     private void readAttributes(List<AttributeType> attribList, String basePath, ModelNode results) {
         if (!results.get("attributes").isDefined()) return;
         for (Property attribute : results.get("attributes").asPropertyList()) {
-            attribList.add(new AttributeType(basePath, attribute));
+            attribList.add(new AttributeType(cliGuiCtx, basePath, attribute));
         }
     }
 

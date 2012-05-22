@@ -140,18 +140,15 @@ public class ManagementModelNode extends DefaultMutableTreeNode {
     }
 
     /**
-     * Returns a List<ModelNode> with the parent's address.
+     * Returns a List<ModelNode> version of the address path.
      *
-     * @return a List<ModelNode> with the parent's address.
+     * @return a List<ModelNode> version of the address path.
      */
-    public List<ModelNode> getParentAddress() throws CommandFormatException {
+    public List<ModelNode> getAddress() throws CommandFormatException {
         if (this.isRoot()) return new ArrayList<ModelNode>();
 
-        ManagementModelNode parentNode = (ManagementModelNode)getParent();
-        String parentPath = parentNode.addressPath();
-
-        // parse :read-operation-names just to get the properly-formatted address
-        ModelNode request = cliGuiCtx.getExecutor().buildRequest(parentPath + ":read-operation-names");
+        // use :read-operation-names just to get the properly-formatted address
+        ModelNode request = cliGuiCtx.getExecutor().buildRequest(addressPath() + ":read-operation-names");
         return request.get("address").asList();
     }
 

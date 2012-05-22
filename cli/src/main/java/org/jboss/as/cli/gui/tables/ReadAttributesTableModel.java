@@ -21,13 +21,13 @@ package org.jboss.as.cli.gui.tables;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.jboss.as.cli.CommandFormatException;
 import org.jboss.as.cli.gui.CliGuiContext;
 import org.jboss.as.cli.gui.ManagementModelNode;
-import org.jboss.as.cli.gui.ManagementModelNode.UserObject;
+import org.jboss.as.cli.gui.component.WordWrapLabel;
 import org.jboss.dmr.ModelNode;
-import org.jboss.dmr.Property;
 
 /**
  *
@@ -36,7 +36,6 @@ import org.jboss.dmr.Property;
 public class ReadAttributesTableModel extends DefaultTableModel {
 
     private CliGuiContext cliGuiCtx;
-    private ManagementModelNode node;
     private List<AttributeType> attributes;
 
     private ModelNode result;
@@ -45,9 +44,8 @@ public class ReadAttributesTableModel extends DefaultTableModel {
 
     public ReadAttributesTableModel(CliGuiContext cliGuiCtx, ManagementModelNode node, List<AttributeType> attributes) throws CommandFormatException, IOException {
         this.cliGuiCtx = cliGuiCtx;
-        this.node = node;
         this.attributes = attributes;
-        tableCalc = new TableCalculator(node, attributes);
+        tableCalc = new TableCalculator(node.getAddress(), attributes);
 
         refresh();
 
@@ -68,6 +66,10 @@ public class ReadAttributesTableModel extends DefaultTableModel {
         if (success) {
             result = attempt;
             tableCalc.parseRows(result);
+        } else {
+            String failureDesc = attempt.get("failure-description").asString();
+            WordWrapLabel failureLabel = new WordWrapLabel(failureDesc, 300);
+            JOptionPane.showMessageDialog(cliGuiCtx.getMainWindow(), failureLabel, "Table creation failure", JOptionPane.ERROR_MESSAGE);
         }
 
         System.out.println("result=");
@@ -96,19 +98,6 @@ public class ReadAttributesTableModel extends DefaultTableModel {
         return result.get("result", "step-" + column, "result").asList();
     }
 
-    private String getColumnZeroValue(int row) {
-        List<ModelNode> col1 = getColumn(1);
-        ModelNode rowNode = col1.get(row);
-        for (ModelNode address : rowNode.get("address").asList()) {
-            Property addrProp = address.asProperty();
-            if (addrProp.getName().equals(getColumnName(0))) {
-                return addrProp.getValue().asString();
-            }
-        }
-
-        throw new IllegalStateException("Can't find column 0 value for row " + row);
-    }
-
     @Override
     public int getColumnCount() {
         if (tableCalc == null) return 0;
@@ -129,10 +118,6 @@ public class ReadAttributesTableModel extends DefaultTableModel {
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         return String.class;
-    }
-
-    private UserObject getUserObject() {
-        return (UserObject)node.getUserObject();
     }
 
 }
