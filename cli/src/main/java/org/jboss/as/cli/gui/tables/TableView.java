@@ -19,7 +19,9 @@
 package org.jboss.as.cli.gui.tables;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -39,7 +41,7 @@ public class TableView extends RefreshableViewPanel {
     private ReadAttributesTableModel tableModel;
     private JTable table = new JTable();
 
-    public TableView(CliGuiContext cliGuiCtx, String tableName, ManagementModelNode root, List<AttributeType> attrs) throws Exception {
+    public TableView(final CliGuiContext cliGuiCtx, String tableName, ManagementModelNode root, List<AttributeType> attrs) throws Exception {
         table.setAutoCreateRowSorter(true);
         setLayout(new BorderLayout());
 
@@ -53,6 +55,19 @@ public class TableView extends RefreshableViewPanel {
 
         this.tableModel = new ReadAttributesTableModel(cliGuiCtx, root, attrs);
         this.table.setModel(tableModel);
+        this.table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (!e.isPopupTrigger()) return;
+                cliGuiCtx.getViewManager().comingSoon(cliGuiCtx);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (!e.isPopupTrigger()) return;
+                cliGuiCtx.getViewManager().comingSoon(cliGuiCtx);
+            }
+        });
     }
 
     @Override

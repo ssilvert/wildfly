@@ -92,9 +92,13 @@ public class ViewManager {
 
     private class ComingSoonActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            String msg = "Feature coming soon.";
-            JOptionPane.showMessageDialog(cliGuiCtx.getMainWindow(), msg, "Share with Web Console", JOptionPane.INFORMATION_MESSAGE);
+            comingSoon(cliGuiCtx);
         }
+    }
+
+    public static void comingSoon(CliGuiContext cliGuiCtx) {
+        String msg = "Feature coming soon.";
+        JOptionPane.showMessageDialog(cliGuiCtx.getMainWindow(), msg, msg, JOptionPane.INFORMATION_MESSAGE);
     }
 
     private class RefreshActionListener implements ActionListener {
