@@ -83,7 +83,7 @@ public class JConsoleCLIPlugin extends JConsolePlugin {
         JPanel cliGuiPanel = cliGuiCtx.getMainPanel();
 
         jconsolePanel = new JPanel(new BorderLayout());
-        jconsolePanel.add(GuiMain.makeMenuBar(cliGuiCtx), BorderLayout.NORTH);
+        jconsolePanel.add(GuiMain.initMenuBar(cliGuiCtx), BorderLayout.NORTH);
         jconsolePanel.add(cliGuiPanel, BorderLayout.CENTER);
 
         panelMap.put(getJBossServerName(), jconsolePanel);

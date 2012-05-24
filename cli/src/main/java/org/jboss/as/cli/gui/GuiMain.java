@@ -123,7 +123,7 @@ public class GuiMain {
                 System.exit(0);
             }
         });
-        frame.setJMenuBar(makeMenuBar(cliGuiCtx));
+        frame.setJMenuBar(initMenuBar(cliGuiCtx));
         frame.setSize(800, 600);
 
         Container contentPane = frame.getContentPane();
@@ -134,8 +134,8 @@ public class GuiMain {
         frame.setVisible(true);
     }
 
-    public static JMenuBar makeMenuBar(CliGuiContext cliGuiCtx) {
-        JMenuBar menuBar = new JMenuBar();
+    public static JMenuBar initMenuBar(CliGuiContext cliGuiCtx) {
+        JMenuBar menuBar = cliGuiCtx.getMenuBar();
         menuBar.add(makeMetaCmdMenu(cliGuiCtx));
         menuBar.add(makeViewsMenu(cliGuiCtx));
         JMenu lfMenu = makeLookAndFeelMenu(cliGuiCtx);

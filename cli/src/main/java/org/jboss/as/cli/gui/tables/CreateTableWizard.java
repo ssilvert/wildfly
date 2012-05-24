@@ -200,7 +200,7 @@ public class CreateTableWizard extends JDialog implements ItemSelectionListener 
 
                 try {
                     TableView tableView = new TableView(cliGuiCtx,
-                                                        panelOne.getName(),
+                                                        panelOne.getViewName(),
                                                         panelTwo.getSelectedNode(),
                                                         panelThree.getSelectedAttributes());
                     viewMgr.addView(panelOne.getViewName(), tableView);

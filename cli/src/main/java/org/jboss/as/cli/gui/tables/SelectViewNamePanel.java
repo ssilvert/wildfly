@@ -18,12 +18,16 @@
  */
 package org.jboss.as.cli.gui.tables;
 
-import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import org.jboss.as.cli.gui.component.AuthorInfoPanel;
 import org.jboss.as.cli.gui.component.WordWrapLabel;
 
 /**
@@ -33,26 +37,41 @@ import org.jboss.as.cli.gui.component.WordWrapLabel;
 public class SelectViewNamePanel extends JPanel {
     //TODO: not sure why I need <html> since WordWrapLabel already embeds it
     private static final String SELECT_NAME_HELP = "<html><font size='4'>Select a table name.  This will also be the tab name.</font></html>";
+    private static final String AUTHOR_INFO_HELP = "<html><font size='4'>Author info is optional, but recommended if you will be sharing your table view.</font></html>";
 
     private WordWrapLabel selectNameHelp = new WordWrapLabel(SELECT_NAME_HELP, 500);
+    private WordWrapLabel authorInfoHelp = new WordWrapLabel(AUTHOR_INFO_HELP, 500);
+
     private ItemSelectionListener wizard;
 
     private JTextField nameField = new JTextField(30);
 
     public SelectViewNamePanel(ItemSelectionListener wizard) {
-        setLayout(new BorderLayout());
+        setLayout(new GridBagLayout());
         this.wizard = wizard;
+        addNameFieldListener();
 
+        GridBagConstraints gbConst = new GridBagConstraints();
+        gbConst.anchor = GridBagConstraints.WEST;
+        gbConst.insets = new Insets(5,5,5,5);
+        gbConst.gridwidth = GridBagConstraints.REMAINDER;
+        add(selectNameHelp, gbConst);
 
-        add(selectNameHelp, BorderLayout.NORTH);
+        gbConst.gridwidth = 1;
+        JLabel tableNameLabel = new JLabel("Table Name:");
+        add(tableNameLabel, gbConst);
 
-        add(makeNamePanel(), BorderLayout.WEST);
+        gbConst.gridwidth = GridBagConstraints.REMAINDER;
+        add(nameField, gbConst);
+
+        add(Box.createHorizontalStrut(100), gbConst);
+
+        add(authorInfoHelp, gbConst);
+
+        add(new AuthorInfoPanel(), gbConst);
     }
 
-    private JPanel makeNamePanel() {
-
-        JLabel tableNameLabel = new JLabel("Table Name:");
-
+    private void addNameFieldListener() {
         nameField.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
 
@@ -66,11 +85,6 @@ public class SelectViewNamePanel extends JPanel {
                 if (e.getDocument().getLength() == 0) wizard.noItemSelected();
             }
         });
-
-        JPanel namePanel = new JPanel();
-        namePanel.add(tableNameLabel);
-        namePanel.add(nameField);
-        return namePanel;
     }
 
     public String getViewName() {

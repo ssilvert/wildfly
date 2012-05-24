@@ -18,16 +18,26 @@
  */
 package org.jboss.as.cli.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import org.jboss.as.cli.gui.component.DisplayTextDialogMenuItem;
+import org.jboss.as.cli.gui.component.RefreshableViewPanel;
+import org.jboss.as.cli.gui.component.ViewPanel;
 
 /**
  *
  * @author Stan Silvert ssilvert@redhat.com (C) 2012 Red Hat Inc.
  */
 public class ViewManager {
+    private static final int VIEW_MENU_POSITION = 1;
+
     private CliGuiContext cliGuiCtx;
 
     private List<JPanel> views = new ArrayList<JPanel>();
@@ -36,12 +46,84 @@ public class ViewManager {
         this.cliGuiCtx = cliGuiCtx;
     }
 
-    public void addView(String name, JPanel panel) {
+    public synchronized void addView(String name, JPanel view) {
         JTabbedPane tabs = cliGuiCtx.getTabs();
         int tabCount = tabs.getComponentCount();
 
-        tabs.add(name, panel);
+        tabs.add(name, view);
         tabs.setSelectedIndex(tabCount);
-        this.views.add(panel);
+        this.views.add(view);
+
+        addToViewMenu(view, name, tabCount);
+    }
+
+    private void addToViewMenu(JPanel view, String name, int tabIndex) {
+        JMenu viewMenu = cliGuiCtx.getMenuBar().getMenu(VIEW_MENU_POSITION);
+
+        if (views.size() == 1) viewMenu.addSeparator();
+
+        JMenu subMenu = new JMenu(name);
+
+        JMenuItem shareItem = new JMenuItem("Share with Web Console");
+        shareItem.addActionListener(new ComingSoonActionListener());
+        subMenu.add(shareItem);
+
+        JMenuItem editItem = new JMenuItem("Edit");
+        editItem.addActionListener(new ComingSoonActionListener());
+        subMenu.add(editItem);
+
+        if (view instanceof RefreshableViewPanel) {
+            JMenuItem refreshItem = new JMenuItem("Refresh");
+            refreshItem.addActionListener(new RefreshActionListener((RefreshableViewPanel)view));
+            subMenu.add(refreshItem);
+        }
+
+        if (view instanceof ViewPanel) {
+            JMenuItem showDefItem = new DisplayTextDialogMenuItem("View Definition", "Show definition", ((ViewPanel)view).getDefinition().toString());
+            subMenu.add(showDefItem);
+        }
+
+        JMenuItem closeItem = new JMenuItem("Close");
+        closeItem.addActionListener(new CloseViewActionListener(view, viewMenu, subMenu));
+        subMenu.add(closeItem);
+
+        viewMenu.add(subMenu);
+    }
+
+    private class ComingSoonActionListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            String msg = "Feature coming soon.";
+            JOptionPane.showMessageDialog(cliGuiCtx.getMainWindow(), msg, "Share with Web Console", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private class RefreshActionListener implements ActionListener {
+        private RefreshableViewPanel view;
+
+        public RefreshActionListener(RefreshableViewPanel view) {
+            this.view = view;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            view.refresh();
+        }
+    }
+
+    private class CloseViewActionListener implements ActionListener {
+
+        private JPanel view;
+        private JMenu viewMenu;
+        private JMenu subMenu;
+
+        public CloseViewActionListener(JPanel view, JMenu viewMenu, JMenu subMenu) {
+            this.view = view;
+            this.viewMenu = viewMenu;
+            this.subMenu = subMenu;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            cliGuiCtx.getTabs().remove(view);
+            viewMenu.remove(subMenu);
+        }
     }
 }
