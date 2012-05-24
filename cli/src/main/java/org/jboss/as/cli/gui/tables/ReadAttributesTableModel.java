@@ -25,6 +25,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.jboss.as.cli.CommandFormatException;
 import org.jboss.as.cli.gui.CliGuiContext;
+import org.jboss.as.cli.gui.CommandExecutor.Response;
 import org.jboss.as.cli.gui.ManagementModelNode;
 import org.jboss.as.cli.gui.component.WordWrapLabel;
 import org.jboss.dmr.ModelNode;
@@ -38,6 +39,7 @@ public class ReadAttributesTableModel extends DefaultTableModel {
     private CliGuiContext cliGuiCtx;
     private List<AttributeType> attributes;
 
+    private ModelNode request;
     private ModelNode result;
 
     private TableCalculator tableCalc;
@@ -51,17 +53,12 @@ public class ReadAttributesTableModel extends DefaultTableModel {
 
 //        tableCalc.dumpRows();
     }
-/*
-    private void testAttrTypes() throws CommandFormatException {
-        TableCalculator attrTypes = new TableCalculator(node, attributes);
-        System.out.println("column count = " + attrTypes.getColumnCount());
-        for (int i=0; i < attrTypes.getColumnCount(); i++) {
-            System.out.println("|" + attrTypes.getColumnName(i) + "|");
-        }
-    }
-*/
+
     public final synchronized void refresh() throws CommandFormatException, IOException {
-        ModelNode attempt = cliGuiCtx.getExecutor().doCompositeCommand(makeReadAttrCommands(), false);
+        Response response = cliGuiCtx.getExecutor().doCompositeCommand(makeReadAttrCommands(), false);
+        request = response.getDmrRequest();
+
+        ModelNode attempt = response.getDmrResponse();
         boolean success = attempt.get("outcome").asString().equals("success");
         if (success) {
             result = attempt;
@@ -72,9 +69,13 @@ public class ReadAttributesTableModel extends DefaultTableModel {
             JOptionPane.showMessageDialog(cliGuiCtx.getMainWindow(), failureLabel, "Table creation failure", JOptionPane.ERROR_MESSAGE);
         }
 
-        System.out.println("result=");
-        System.out.println(attempt.toString());
+   //     System.out.println("result=");
+   //     System.out.println(attempt.toString());
 
+    }
+
+    ModelNode getCompositeCommand() {
+        return request;
     }
 
     private List<String> makeReadAttrCommands() {

@@ -19,32 +19,56 @@
 package org.jboss.as.cli.gui.tables;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.util.List;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import org.jboss.as.cli.gui.CliGuiContext;
 import org.jboss.as.cli.gui.ManagementModelNode;
+import org.jboss.as.cli.gui.component.RefreshableViewPanel;
+import org.jboss.dmr.ModelNode;
 
 /**
  *
  * @author Stan Silvert ssilvert@redhat.com (C) 2012 Red Hat Inc.
  */
-public class TableView extends JPanel {
-
-    private String tableName;
+public class TableView extends RefreshableViewPanel {
 
     private ReadAttributesTableModel tableModel;
     private JTable table = new JTable();
 
     public TableView(CliGuiContext cliGuiCtx, String tableName, ManagementModelNode root, List<AttributeType> attrs) throws Exception {
-        this.tableName = tableName;
         table.setAutoCreateRowSorter(true);
         setLayout(new BorderLayout());
 
+        JLabel tableNameLabel = new JLabel("<html><font size='4'><b>" + tableName + "<b></font></html>");
+        JPanel northPanel = new JPanel();
+        northPanel.add(tableNameLabel);
+        add(northPanel, BorderLayout.NORTH);
+
         JScrollPane scroller = new JScrollPane(table);
         add(scroller, BorderLayout.CENTER);
+
         this.tableModel = new ReadAttributesTableModel(cliGuiCtx, root, attrs);
         this.table.setModel(tableModel);
     }
+
+    @Override
+    public void refresh() {
+        try {
+            tableModel.refresh();
+            repaint();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public ModelNode getDefinition() {
+        return tableModel.getCompositeCommand();
+    }
+
+
 }

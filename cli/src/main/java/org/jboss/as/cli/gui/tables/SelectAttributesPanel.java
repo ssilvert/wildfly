@@ -78,7 +78,7 @@ public class SelectAttributesPanel extends JPanel {
         this.helpShowing = false;
 
         //TODO: not sure why I need <html> since WordWrapLabel already embeds it
-        this.selectedNodeLabel.setText("<html><font size='4'>" + SELECT_ATTRS_HELP + "<b>" + selectedNode.addressPath() + "</b></font></html>");
+        this.selectedNodeLabel.setText("<html><font size='4'>" + SELECT_ATTRS_HELP + "<b>" + selectedNode.addressPath() + "</b><br/>Press Help button for attribute descriptions.</font></html>");
 
         attributeCheckBoxes = new ArrayList<AttributeCheckBox>();
         helpTextLabels = new ArrayList<WordWrapLabel>();

@@ -106,8 +106,8 @@ class TableCalculator {
             }
         }
 
-        this.dumpRows();
-        dumpAddressColumns();
+      //  this.dumpRows();
+      //  dumpAddressColumns();
     }
 
     private void parseRow(AttributeType attrType, ModelNode stepRow) {

@@ -72,7 +72,7 @@ public class CommandExecutor {
         return new Response(command, request, response);
     }
 
-    public synchronized ModelNode doCompositeCommand(List<String> commands, boolean rollbackOnFailure) throws CommandFormatException, IOException {
+    public synchronized Response doCompositeCommand(List<String> commands, boolean rollbackOnFailure) throws CommandFormatException, IOException {
         ModelNode composite = new ModelNode();
         composite.get("operation").set("composite");
         composite.get("address").setEmptyList();
@@ -83,9 +83,11 @@ public class CommandExecutor {
         }
         composite.get("steps").set(steps);
         composite.get("operation-headers", "rollback-on-runtime-failure").set(rollbackOnFailure);
-        System.out.println("composite=");
-        System.out.println(composite.toString());
-        return client.execute(composite);
+//        System.out.println("composite=");
+//        System.out.println(composite.toString());
+
+        Response response = new Response(commands.toString(), composite, client.execute(composite));
+        return response;
     }
 
     private ModelNode execute(String command, ModelNode request) throws IOException {

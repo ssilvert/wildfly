@@ -19,6 +19,7 @@
 package org.jboss.as.cli.gui;
 
 import java.awt.Window;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
@@ -40,6 +41,7 @@ public class CliGuiContext {
     private boolean isStandalone;
     private ChartManager chartManager = new ChartManager(this);
     private ViewManager viewManager = new ViewManager(this);
+    private JMenuBar menuBar = new JMenuBar();
 
     CliGuiContext(boolean isEmbedded) {
         this.isEmbedded = isEmbedded;
@@ -130,5 +132,9 @@ public class CliGuiContext {
 
     public ViewManager getViewManager() {
         return this.viewManager;
+    }
+
+    public JMenuBar getMenuBar() {
+        return this.menuBar;
     }
 }
