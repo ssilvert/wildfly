@@ -24,6 +24,7 @@
       <subsystem supplement="domain">configuration/subsystems/security.xml</subsystem>
       <subsystem>configuration/subsystems/threads.xml</subsystem>
       <subsystem>configuration/subsystems/transactions.xml</subsystem>
+      <subsystem>configuration/subsystems/views.xml</subsystem>
       <subsystem>configuration/subsystems/web.xml</subsystem>
       <subsystem>configuration/subsystems/webservices.xml</subsystem>
       <subsystem>configuration/subsystems/weld.xml</subsystem>
@@ -53,6 +54,7 @@
       <subsystem supplement="domain">configuration/subsystems/security.xml</subsystem>
       <subsystem>configuration/subsystems/threads.xml</subsystem>
       <subsystem>configuration/subsystems/transactions.xml</subsystem>
+      <subsystem>configuration/subsystems/views.xml</subsystem>
       <subsystem supplement="ha">configuration/subsystems/web.xml</subsystem>
       <subsystem>configuration/subsystems/webservices.xml</subsystem>
       <subsystem>configuration/subsystems/weld.xml</subsystem>
@@ -85,6 +87,7 @@
       <subsystem supplement="domain">configuration/subsystems/security.xml</subsystem>
       <subsystem>configuration/subsystems/threads.xml</subsystem>
       <subsystem>configuration/subsystems/transactions.xml</subsystem>
+      <subsystem>configuration/subsystems/views.xml</subsystem>
       <subsystem>configuration/subsystems/web.xml</subsystem>
       <subsystem>configuration/subsystems/webservices.xml</subsystem>
       <subsystem>configuration/subsystems/weld.xml</subsystem>
@@ -119,6 +122,7 @@
       <subsystem supplement="domain">configuration/subsystems/security.xml</subsystem>
       <subsystem>configuration/subsystems/threads.xml</subsystem>
       <subsystem>configuration/subsystems/transactions.xml</subsystem>
+      <subsystem>configuration/subsystems/views.xml</subsystem>
       <subsystem supplement="ha">configuration/subsystems/web.xml</subsystem>
       <subsystem>configuration/subsystems/webservices.xml</subsystem>
       <subsystem>configuration/subsystems/weld.xml</subsystem>

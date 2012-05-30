@@ -998,6 +998,11 @@
                     <groupId>org.jboss.as</groupId>
                     <artifactId>jboss-as-transactions</artifactId>
                 </dependency>
+        
+                <dependency>
+                    <groupId>org.jboss.as</groupId>
+                    <artifactId>jboss-as-views</artifactId>
+                </dependency>
 
                 <dependency>
                     <groupId>org.jboss.as</groupId>
