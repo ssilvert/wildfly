@@ -97,15 +97,18 @@ public class SubsystemExtension implements Extension {
         @Override
         public void writeContent(XMLExtendedStreamWriter writer, SubsystemMarshallingContext context) throws XMLStreamException {
             context.startSubsystemElement(SubsystemExtension.NAMESPACE, false);
-            System.out.println("context.getModelNode()");
-            System.out.println(context.getModelNode().toString());
+            writeViews(writer, context);
+            writer.writeEndElement();
+        }
+
+        private void writeViews(XMLExtendedStreamWriter writer, SubsystemMarshallingContext context) throws XMLStreamException {
+            if (!context.getModelNode().get("view").isDefined()) return;
             for (Property view : context.getModelNode().get("view").asPropertyList()) {
                 writer.writeStartElement("view");
                 writer.writeAttribute("name", view.getName());
                 writer.writeAttribute("definition", view.getValue().get("definition").asString());
                 writer.writeEndElement();
             }
-            writer.writeEndElement();
         }
 
         /**
