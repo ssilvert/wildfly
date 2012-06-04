@@ -64,9 +64,11 @@ public class ViewManager {
 
         JMenu subMenu = new JMenu(name);
 
-        JMenuItem shareItem = new JMenuItem("Share with Web Console");
-        shareItem.addActionListener(new ComingSoonActionListener());
-        subMenu.add(shareItem);
+        if (view instanceof ViewPanel) {
+            JMenuItem shareItem = new JMenuItem("Share with Web Console");
+            shareItem.addActionListener(new ShareViewActionListener((ViewPanel)view, name));
+            subMenu.add(shareItem);
+        }
 
         JMenuItem editItem = new JMenuItem("Edit");
         editItem.addActionListener(new ComingSoonActionListener());
@@ -99,6 +101,24 @@ public class ViewManager {
     public static void comingSoon(CliGuiContext cliGuiCtx) {
         String msg = "Feature coming soon.";
         JOptionPane.showMessageDialog(cliGuiCtx.getMainWindow(), msg, msg, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private class ShareViewActionListener implements ActionListener {
+
+        private ViewPanel view;
+        private String name;
+
+        public ShareViewActionListener(ViewPanel view, String name) {
+            this.view = view;
+            this.name = name;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            //TODO: decide how to handle domains.  Should we just upload view to all instances of
+            //      the views subsystem?
+            cliGuiCtx.getExecutor().doCommand("/subsystem")
+        }
+
     }
 
     private class RefreshActionListener implements ActionListener {
