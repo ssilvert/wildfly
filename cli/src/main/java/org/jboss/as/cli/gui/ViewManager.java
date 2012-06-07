@@ -28,8 +28,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import org.jboss.as.cli.gui.component.DisplayTextDialogMenuItem;
+import org.jboss.as.cli.gui.component.MsgDialog;
 import org.jboss.as.cli.gui.component.RefreshableViewPanel;
 import org.jboss.as.cli.gui.component.ViewPanel;
+import org.jboss.dmr.ModelNode;
 
 /**
  *
@@ -65,7 +67,7 @@ public class ViewManager {
         JMenu subMenu = new JMenu(name);
 
         if (view instanceof ViewPanel) {
-            JMenuItem shareItem = new JMenuItem("Share with Web Console");
+            JMenuItem shareItem = new JMenuItem("Share view with other clients");
             shareItem.addActionListener(new ShareViewActionListener((ViewPanel)view, name));
             subMenu.add(shareItem);
         }
@@ -116,7 +118,17 @@ public class ViewManager {
         public void actionPerformed(ActionEvent e) {
             //TODO: decide how to handle domains.  Should we just upload view to all instances of
             //      the views subsystem?
-            cliGuiCtx.getExecutor().doCommand("/subsystem")
+            try {
+                ModelNode response = cliGuiCtx.getExecutor().doCommand("/subsystem=views/view=" + name + "/:add(definition=" + view.getDefinition().toString() + ")");
+                if (response.get("outcome").asString().equals("success")) {
+                    MsgDialog.showInfoMessage(cliGuiCtx, "View Upload Success", "Successfully uploaded to view subsystem.");
+                } else {
+                    MsgDialog.showDMRFailure(cliGuiCtx, response, "View Upload Failed");
+                }
+            } catch (Exception ex) {
+                MsgDialog.showError(cliGuiCtx, "CLI command failed", ex.getLocalizedMessage());
+                ex.printStackTrace();
+            }
         }
 
     }

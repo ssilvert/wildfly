@@ -41,7 +41,7 @@ public class TableView extends RefreshableViewPanel {
     private ReadAttributesTableModel tableModel;
     private JTable table = new JTable();
 
-    public TableView(final CliGuiContext cliGuiCtx, String tableName, ManagementModelNode root, List<AttributeType> attrs) throws Exception {
+    public TableView(final CliGuiContext cliGuiCtx, String tableName, ManagementModelNode root, List<AttributeTypeImpl> attrs) throws Exception {
         table.setAutoCreateRowSorter(true);
         setLayout(new BorderLayout());
 
@@ -82,7 +82,11 @@ public class TableView extends RefreshableViewPanel {
 
     @Override
     public ModelNode getDefinition() {
-        return tableModel.getCompositeCommand();
+        TableDefinition def = new TableDefinition(tableModel.getCompositeCommand(),
+                                                  tableModel.getBaseAddress(),
+                                                  tableModel.getAttributeList());
+
+        return def.getDefinition();
     }
 
 

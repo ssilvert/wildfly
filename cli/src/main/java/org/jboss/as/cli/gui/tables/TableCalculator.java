@@ -19,17 +19,19 @@
 package org.jboss.as.cli.gui.tables;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.jboss.dmr.ModelNode;
 import org.jboss.dmr.ModelType;
 import org.jboss.dmr.Property;
 
 /**
- * Manages the list of TableCalculator.
+ * This class acts as a model for a table.  To refresh the model,
+ * call paresRows(), which calculates the values for each cell in the table.
  *
  * @author Stan Silvert ssilvert@redhat.com (C) 2012 Red Hat Inc.
  */
-class TableCalculator {
+public class TableCalculator {
 
     // The address of everything before the AttributeType's path
     private List<ModelNode> baseAddress;
@@ -41,9 +43,23 @@ class TableCalculator {
 
     private List<ModelNode> rows;
 
-    public TableCalculator(List<ModelNode> baseAddress, List<AttributeType> attributes) {
-        this.baseAddress = baseAddress;
-        this.attributes = attributes;
+    public TableCalculator() {
+
+    }
+
+    public boolean isAttributeColumn(int column) {
+        return !(column < addressColumns.size());
+    }
+
+    /**
+     * Returns the AttributeType for the column.  If the column
+     * is an address column instead of an attribute column, return null.
+     * @param column The column index.
+     * @return The AttributeType or null.
+     */
+    public AttributeType getAttributeType(int column) {
+        if (!isAttributeColumn(column)) return null;
+        return this.attributes.get(column);
     }
 
     public int getColumnCount() {
@@ -57,8 +73,32 @@ class TableCalculator {
         return this.rows.size();
     }
 
+    public ModelNode getFullAddress(int row, int column) {
+        ModelNode address = new ModelNode();
+
+        // copy base address
+        for (Iterator i = baseAddress.iterator(); i.hasNext(); ) {
+            ModelNode addrElement = (ModelNode)i.next();
+
+            // don't add the last one
+            if (i.hasNext()) address.add(addrElement.clone());
+        }
+
+        for (int i=0; i < column; i++) {
+            if (isAttributeColumn(i)) return address;
+            ModelNode value = getValueAt(row, i);
+            if (value.isDefined()) {
+                ModelNode addrElement = new ModelNode();
+                addrElement.get(getColumnName(i)).set(value.asString());
+                address.add(addrElement);
+            }
+        }
+
+        return address;
+    }
+
     public String getColumnName(int column) {
-        if (column < addressColumns.size()) {
+        if (!isAttributeColumn(column)) {
             return addressColumns.get(column).getName();
         } else {
             return attributes.get(column - addressColumns.size()).getName();
@@ -87,7 +127,9 @@ class TableCalculator {
         return rowAddress.get(addrElementPosition).asProperty().getValue();
     }
 
-    void parseRows(ModelNode result) {
+    public void parseRows(List<ModelNode> baseAddress, List<AttributeType> attributes, ModelNode result) {
+        this.baseAddress = baseAddress;
+        this.attributes = attributes;
         this.rows = new ArrayList<ModelNode>();
         this.addressColumns = new ArrayList<Column>();
 

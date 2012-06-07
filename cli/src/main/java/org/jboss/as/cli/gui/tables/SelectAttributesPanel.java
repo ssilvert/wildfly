@@ -65,8 +65,8 @@ public class SelectAttributesPanel extends JPanel {
         add(scroller, BorderLayout.CENTER);
     }
 
-    public List<AttributeType> getSelectedAttributes() {
-        List<AttributeType> attrList = new ArrayList<AttributeType>();
+    public List<AttributeTypeImpl> getSelectedAttributes() {
+        List<AttributeTypeImpl> attrList = new ArrayList<AttributeTypeImpl>();
         for (AttributeCheckBox attrCheckBox : attributeCheckBoxes) {
             if (attrCheckBox.isSelected()) attrList.add(attrCheckBox.getAttrType());
         }
@@ -84,7 +84,7 @@ public class SelectAttributesPanel extends JPanel {
         helpTextLabels = new ArrayList<WordWrapLabel>();
         JPanel checkBoxPanel = new JPanel();
         checkBoxPanel.setLayout(new BoxLayout(checkBoxPanel, BoxLayout.Y_AXIS));
-        for (AttributeType attrType : findAttributesForSelection()) {
+        for (AttributeTypeImpl attrType : findAttributesForSelection()) {
             AttributeCheckBox attrCheckBox = new AttributeCheckBox(attrType);
             attrCheckBox.setToolTipText(attrType.getHelpText());
             attributeCheckBoxes.add(attrCheckBox);
@@ -111,15 +111,15 @@ public class SelectAttributesPanel extends JPanel {
 
     public class AttributeCheckBox extends JCheckBox implements ChangeListener {
 
-        private AttributeType attrType;
+        private AttributeTypeImpl attrType;
 
-        public AttributeCheckBox(AttributeType attrType) {
+        public AttributeCheckBox(AttributeTypeImpl attrType) {
             super(attrType.toString());
             this.attrType = attrType;
             addChangeListener(this);
         }
 
-        public AttributeType getAttrType() {
+        public AttributeTypeImpl getAttrType() {
             return this.attrType;
         }
 
@@ -143,7 +143,7 @@ public class SelectAttributesPanel extends JPanel {
         return true;
     }
 
-    private List<AttributeType> findAttributesForSelection() {
+    private List<AttributeTypeImpl> findAttributesForSelection() {
         ModelNode rscDesc = new ModelNode();
         try {
             rscDesc = cliGuiCtx.getExecutor().doCommand(selectedNode.addressPath() + ":read-resource-description(recursive=true)");
@@ -151,7 +151,7 @@ public class SelectAttributesPanel extends JPanel {
             ex.printStackTrace();
         }
 
-        List<AttributeType> attribList = new ArrayList<AttributeType>();
+        List<AttributeTypeImpl> attribList = new ArrayList<AttributeTypeImpl>();
 
         if (selectedNode.isGeneric()) {
             for (ModelNode results : rscDesc.get("result").asList()) {
@@ -164,19 +164,19 @@ public class SelectAttributesPanel extends JPanel {
         return attribList;
     }
 
-    private void findAttributes(List<AttributeType> attribList, String basePath, ModelNode results) {
+    private void findAttributes(List<AttributeTypeImpl> attribList, String basePath, ModelNode results) {
         readAttributes(attribList, basePath, results);
         readChildren(attribList, basePath, results);
     }
 
-    private void readAttributes(List<AttributeType> attribList, String basePath, ModelNode results) {
+    private void readAttributes(List<AttributeTypeImpl> attribList, String basePath, ModelNode results) {
         if (!results.get("attributes").isDefined()) return;
         for (Property attribute : results.get("attributes").asPropertyList()) {
-            attribList.add(new AttributeType(cliGuiCtx, basePath, attribute));
+            attribList.add(new AttributeTypeImpl(cliGuiCtx, basePath, attribute));
         }
     }
 
-    private void readChildren(List<AttributeType> attribList, String basePath, ModelNode results) {
+    private void readChildren(List<AttributeTypeImpl> attribList, String basePath, ModelNode results) {
         if (!results.get("children").isDefined()) return;
         for (Property child : results.get("children").asPropertyList()) {
             if (!child.getValue().get("model-description").isDefined()) continue;

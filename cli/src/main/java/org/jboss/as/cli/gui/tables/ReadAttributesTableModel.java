@@ -21,13 +21,12 @@ package org.jboss.as.cli.gui.tables;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.jboss.as.cli.CommandFormatException;
 import org.jboss.as.cli.gui.CliGuiContext;
 import org.jboss.as.cli.gui.CommandExecutor.Response;
 import org.jboss.as.cli.gui.ManagementModelNode;
-import org.jboss.as.cli.gui.component.WordWrapLabel;
+import org.jboss.as.cli.gui.component.MsgDialog;
 import org.jboss.dmr.ModelNode;
 
 /**
@@ -37,17 +36,24 @@ import org.jboss.dmr.ModelNode;
 public class ReadAttributesTableModel extends DefaultTableModel {
 
     private CliGuiContext cliGuiCtx;
-    private List<AttributeType> attributes;
+    private List<AttributeTypeImpl> attributes;
+
+    // version of attributes using the interface
+    private List<AttributeType> attrList;
 
     private ModelNode request;
     private ModelNode result;
 
     private TableCalculator tableCalc;
 
-    public ReadAttributesTableModel(CliGuiContext cliGuiCtx, ManagementModelNode node, List<AttributeType> attributes) throws CommandFormatException, IOException {
+    private List<ModelNode> baseAddress;
+
+    public ReadAttributesTableModel(CliGuiContext cliGuiCtx, ManagementModelNode node, List<AttributeTypeImpl> attributes) throws CommandFormatException, IOException {
         this.cliGuiCtx = cliGuiCtx;
+        this.baseAddress = node.getAddress();
         this.attributes = attributes;
-        tableCalc = new TableCalculator(node.getAddress(), attributes);
+        this.attrList = new ArrayList<AttributeType>(attributes);
+        tableCalc = new TableCalculator();
 
         refresh();
 
@@ -62,11 +68,9 @@ public class ReadAttributesTableModel extends DefaultTableModel {
         boolean success = attempt.get("outcome").asString().equals("success");
         if (success) {
             result = attempt;
-            tableCalc.parseRows(result);
+            tableCalc.parseRows(baseAddress, attrList, result);
         } else {
-            String failureDesc = attempt.get("failure-description").asString();
-            WordWrapLabel failureLabel = new WordWrapLabel(failureDesc, 300);
-            JOptionPane.showMessageDialog(cliGuiCtx.getMainWindow(), failureLabel, "Table creation failure", JOptionPane.ERROR_MESSAGE);
+            MsgDialog.showDMRFailure(cliGuiCtx, attempt, "Table creation failure");
         }
 
    //     System.out.println("result=");
@@ -78,9 +82,17 @@ public class ReadAttributesTableModel extends DefaultTableModel {
         return request;
     }
 
+    List<AttributeType> getAttributeList() {
+        return this.attrList;
+    }
+
+    List<ModelNode> getBaseAddress() {
+        return this.baseAddress;
+    }
+
     private List<String> makeReadAttrCommands() {
         List<String> commands = new ArrayList<String>();
-        for (AttributeType attr : attributes) {
+        for (AttributeTypeImpl attr : attributes) {
             commands.add(attr.makeReadCommand());
         }
         return commands;
@@ -93,10 +105,6 @@ public class ReadAttributesTableModel extends DefaultTableModel {
         if (value.isDefined()) return value.asString();
 
         return "";
-    }
-
-    private List<ModelNode> getColumn(int column) {
-        return result.get("result", "step-" + column, "result").asList();
     }
 
     @Override

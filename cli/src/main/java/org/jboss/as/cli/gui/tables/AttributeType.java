@@ -19,60 +19,15 @@
 package org.jboss.as.cli.gui.tables;
 
 import java.util.List;
-import org.jboss.as.cli.CommandFormatException;
-import org.jboss.as.cli.gui.CliGuiContext;
 import org.jboss.dmr.ModelNode;
-import org.jboss.dmr.Property;
 
 /**
  *
  * @author Stan Silvert ssilvert@redhat.com (C) 2012 Red Hat Inc.
  */
-public class AttributeType {
-    private CliGuiContext cliGuiCtx;
-    private String path;
-    private Property attrib;
+public interface AttributeType {
 
-    public AttributeType(CliGuiContext cliGuiCtx, String path, Property attrib) {
-        this.cliGuiCtx = cliGuiCtx;
-        this.path = path;
-        this.attrib = attrib;
-    }
+    List<ModelNode> getAddress();
 
-    public String getHelpText() {
-        ModelNode value = attrib.getValue();
-        if (!value.get("description").isDefined()) return "";
-        return value.get("description").asString();
-    }
-
-    public String getName() {
-        return attrib.getName();
-    }
-
-    public String getPath() {
-        return this.path;
-    }
-
-    public List<ModelNode> getAddress() {
-        try {
-            // use :read-operation-names just to get the properly-formatted address
-            ModelNode request = cliGuiCtx.getExecutor().buildRequest(path + ":read-operation-names");
-            return request.get("address").asList();
-        } catch (CommandFormatException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    public String makeReadCommand() {
-        String name = getName();
-        String command = toString();
-        command = command.substring(0, command.lastIndexOf(name));
-        command += ":read-attribute(name=" + name + ")";
-        return command;
-    }
-
-    @Override
-    public String toString() {
-        return path + attrib.getName();
-    }
+    String getName();
 }
