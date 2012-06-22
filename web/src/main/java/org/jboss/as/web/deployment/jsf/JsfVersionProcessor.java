@@ -31,8 +31,11 @@ import org.jboss.as.server.deployment.DeploymentUnitProcessingException;
 import org.jboss.as.server.deployment.DeploymentUnitProcessor;
 import org.jboss.as.web.deployment.JsfVersionMarker;
 import org.jboss.as.web.deployment.WarMetaData;
+import org.jboss.dmr.ModelNode;
 import org.jboss.metadata.javaee.spec.ParamValueMetaData;
 import org.jboss.metadata.web.spec.WebFragmentMetaData;
+
+import static org.jboss.as.web.Constants.*;
 
 /**
  * @author Stuart Douglas
@@ -42,6 +45,16 @@ public class JsfVersionProcessor implements DeploymentUnitProcessor {
 
     public static final String JSF_CONFIG_NAME_PARAM = "org.jboss.jbossfaces.JSF_CONFIG_NAME";
     public static final String WAR_BUNDLES_JSF_IMPL_PARAM = "org.jboss.jbossfaces.WAR_BUNDLES_JSF_IMPL";
+
+    /**
+     * The jsf container part of the common container config.
+     */
+    private final ModelNode jsfConfig;
+
+    public JsfVersionProcessor(final ModelNode containerConfig) {
+        this.jsfConfig = containerConfig.get(JSF_CONFIGURATION);
+        JsfVersionMarker.setDefaultJSFImpl(jsfConfig.require(JSF_IMPL).asString());
+    }
 
     @Override
     public void deploy(final DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
@@ -85,6 +98,17 @@ public class JsfVersionProcessor implements DeploymentUnitProcessor {
             }
         }
     }
+/*
+    void addJSFContextParams(WebMetaData metadata) {
+        final ModelNode jsfConfig = this.config.get(JSF_CONFIGURATION);
+        List<ParamValueMetaData>  params = metadata.getContextParams();
+        if (params == null) {
+            params = new ArrayList<ParamValueMetaData>();
+            metadata.setContextParams(params);
+        }
+        params.add(createParameter("org.jboss.jbossfaces.JSF_CONFIG_NAME", jsfConfig.require(JSF_IMPL).asString()));
+    } */
+
 
     @Override
     public void undeploy(final DeploymentUnit context) {

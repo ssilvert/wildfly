@@ -47,10 +47,12 @@ public class WarClassloadingDependencyProcessor implements DeploymentUnitProcess
 
     private static final ModuleIdentifier JAVAX_EE_API = ModuleIdentifier.create("javaee.api");
 
-    private static final ModuleIdentifier JSF_IMPL = ModuleIdentifier.create("com.sun.jsf-impl");
-    private static final ModuleIdentifier JSF_API = ModuleIdentifier.create("javax.faces.api");
-    private static final ModuleIdentifier JSF_1_2_IMPL = ModuleIdentifier.create("com.sun.jsf-impl", "1.2");
-    private static final ModuleIdentifier JSF_1_2_API = ModuleIdentifier.create("javax.faces.api", "1.2");
+    private static final ModuleIdentifier MOJARRA_2_1_JSF_IMPL = ModuleIdentifier.create("com.sun.jsf-impl");
+    private static final ModuleIdentifier MOJARRA_2_1_JSF_API = ModuleIdentifier.create("javax.faces.api");
+    private static final ModuleIdentifier MOJARRA_1_2_IMPL = ModuleIdentifier.create("com.sun.jsf-impl", "1.2");
+    private static final ModuleIdentifier MOJARRA_1_2_API = ModuleIdentifier.create("javax.faces.api", "1.2");
+    private static final ModuleIdentifier MYFACES_2_1_JSF_IMPL = ModuleIdentifier.create("org.apache.myfaces.impl");
+    private static final ModuleIdentifier MYFACES_2_1_JSF_API = ModuleIdentifier.create("org.apache.myfaces.api");
     private static final ModuleIdentifier BEAN_VALIDATION = ModuleIdentifier.create("org.hibernate.validator");
     private static final ModuleIdentifier JSTL = ModuleIdentifier.create("javax.servlet.jstl.api");
 
@@ -94,8 +96,9 @@ public class WarClassloadingDependencyProcessor implements DeploymentUnitProcess
     private void addJSFAPI(String jsfVersion, ModuleSpecification moduleSpecification, ModuleLoader moduleLoader) {
         if (jsfVersion.equals(JsfVersionMarker.WAR_BUNDLES_JSF_IMPL)) return;
 
-        ModuleIdentifier jsfModule = JSF_API;
-        if (jsfVersion.equals(JsfVersionMarker.JSF_1_2)) jsfModule = JSF_1_2_API;
+        ModuleIdentifier jsfModule = MOJARRA_2_1_JSF_API;
+        if (jsfVersion.equals(JsfVersionMarker.Mojarra_1_2)) jsfModule = MOJARRA_1_2_API;
+        if (jsfVersion.equals(JsfVersionMarker.MyFaces_2_x)) jsfModule = MYFACES_2_1_JSF_API;
         moduleSpecification.addSystemDependency(new ModuleDependency(moduleLoader, jsfModule, false, false, false, false));
     }
 
@@ -103,11 +106,12 @@ public class WarClassloadingDependencyProcessor implements DeploymentUnitProcess
         if (jsfVersion.equals(JsfVersionMarker.WAR_BUNDLES_JSF_IMPL)) return;
 
         ModuleIdentifier jsfModule = null;
-        if (jsfVersion.equals(JsfVersionMarker.JSF_1_2)) jsfModule = JSF_1_2_IMPL;
-        if (jsfVersion.equals(JsfVersionMarker.JSF_2_0)) jsfModule = JSF_IMPL;
+        if (jsfVersion.equals(JsfVersionMarker.Mojarra_1_2)) jsfModule = MOJARRA_1_2_IMPL;
+        if (jsfVersion.equals(JsfVersionMarker.Mojarra_2_x)) jsfModule = MOJARRA_2_1_JSF_IMPL;
+        if (jsfVersion.equals(JsfVersionMarker.MyFaces_2_x)) jsfModule = MYFACES_2_1_JSF_IMPL;
         if (jsfModule == null) {
-            jsfModule = JSF_IMPL;
-            WebLogger.WEB_LOGGER.unknownJSFVersion(jsfVersion, JsfVersionMarker.JSF_2_0);
+            jsfModule = MOJARRA_2_1_JSF_IMPL;
+            WebLogger.WEB_LOGGER.unknownJSFVersion(jsfVersion, JsfVersionMarker.Mojarra_2_x);
         }
 
         ModuleDependency jsf = new ModuleDependency(moduleLoader, jsfModule, false, false, false, false);

@@ -48,10 +48,12 @@ import org.jboss.modules.ModuleLoadException;
  */
 public class SharedTldsMetaDataBuilder {
 
-    private static final String[] JSF_TAGLIBS = { "html_basic.tld", "jsf_core.tld", "mojarra_ext.tld" };
+    private static final String[] MOJARRA_JSF_TAGLIBS = { "html_basic.tld", "jsf_core.tld", "mojarra_ext.tld" };
+    private static final String[] MYFACES_JSF_TABLIBS = { "myfaces_html.tld", "myfaces_core.tld" };
     private static final String[] JSTL_TAGLIBS = { "c-1_0-rt.tld", "c-1_0.tld", "c.tld", "fmt-1_0-rt.tld", "fmt-1_0.tld", "fmt.tld", "fn.tld", "permittedTaglibs.tld", "scriptfree.tld", "sql-1_0-rt.tld", "sql-1_0.tld", "sql.tld", "x-1_0-rt.tld", "x-1_0.tld", "x.tld" };
 
-    private final ArrayList<TldMetaData> jsfTlds = new ArrayList<TldMetaData>();
+    private final ArrayList<TldMetaData> mojarraTlds = new ArrayList<TldMetaData>();
+    private final ArrayList<TldMetaData> myfacesTlds = new ArrayList<TldMetaData>();
     private final ArrayList<TldMetaData> jstlTlds = new ArrayList<TldMetaData>();
 
     // Not used right now due to hardcoding
@@ -64,27 +66,20 @@ public class SharedTldsMetaDataBuilder {
     }
 
     private void init() {
+        populateSharedTldList(mojarraTlds, "com.sun.jsf-impl", MOJARRA_JSF_TAGLIBS);
+        populateSharedTldList(myfacesTlds, "org.apache.myfaces.impl", MYFACES_JSF_TABLIBS);
+        populateSharedTldList(jstlTlds, "javax.servlet.jstl.api", JSTL_TAGLIBS);
+    }
+
+    // read the shared TLD resource and put the metadata into the list
+    private void populateSharedTldList(ArrayList<TldMetaData> tldList, String packageId, String[] tldNames) {
         try {
-            ModuleClassLoader jsf = Module.getModuleFromCallerModuleLoader(ModuleIdentifier.create("com.sun.jsf-impl")).getClassLoader();
-            for (String tld : JSF_TAGLIBS) {
-                InputStream is = jsf.getResourceAsStream("META-INF/" + tld);
-                if (is != null) {
-                    TldMetaData tldMetaData = parseTLD(tld, is);
-                    jsfTlds.add(tldMetaData);
-                }
-            }
-        } catch (ModuleLoadException e) {
-            // Ignore
-        } catch (Exception e) {
-            // Ignore
-        }
-        try {
-            ModuleClassLoader jstl = Module.getModuleFromCallerModuleLoader(ModuleIdentifier.create("javax.servlet.jstl.api")).getClassLoader();
-            for (String tld : JSTL_TAGLIBS) {
+            ModuleClassLoader jstl = Module.getModuleFromCallerModuleLoader(ModuleIdentifier.create(packageId)).getClassLoader();
+            for (String tld : tldNames) {
                 InputStream is = jstl.getResourceAsStream("META-INF/" + tld);
                 if (is != null) {
                     TldMetaData tldMetaData = parseTLD(tld, is);
-                    jstlTlds.add(tldMetaData);
+                    tldList.add(tldMetaData);
                 }
             }
         } catch (ModuleLoadException e) {
@@ -98,8 +93,13 @@ public class SharedTldsMetaDataBuilder {
         final List<TldMetaData> metadata = new ArrayList<TldMetaData>();
         final DeploymentUnit topLevelDeployment = deploymentUnit.getParent() == null ? deploymentUnit : deploymentUnit.getParent();
 
-        if (!JsfVersionMarker.getVersion(topLevelDeployment).equals(JsfVersionMarker.WAR_BUNDLES_JSF_IMPL)) {
-            metadata.addAll(jsfTlds);
+        String jsfVersionMarker = JsfVersionMarker.getVersion(topLevelDeployment);
+        if (jsfVersionMarker.equals(JsfVersionMarker.Mojarra_1_2) || jsfVersionMarker.equals(JsfVersionMarker.Mojarra_2_x)) {
+            metadata.addAll(mojarraTlds);
+        }
+
+        if (jsfVersionMarker.equals(JsfVersionMarker.MyFaces_2_x)) {
+            metadata.addAll(myfacesTlds);
         }
 
         metadata.addAll(jstlTlds);

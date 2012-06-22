@@ -507,6 +507,10 @@
           <maven-resource group="commons-configuration" artifact="commons-configuration" />
       </module-def>
 
+        <module-def name="org.apache.commons.digester">
+            <maven-resource group="commons-digester" artifact="commons-digester" />
+        </module-def>
+
         <module-def name="org.apache.commons.io">
             <maven-resource group="commons-io" artifact="commons-io"/>
         </module-def>
@@ -563,8 +567,12 @@
             <maven-resource group="org.apache.httpcomponents" artifact="httpmime"/>
         </module-def>
 
-        <module-def name="org.apache.james.mime4j">
-            <maven-resource group="org.apache.james" artifact="apache-mime4j"/>
+        <module-def name="org.apache.myfaces.api">
+            <maven-resource group="org.apache.myfaces.core" artifact="myfaces-api"/>
+        </module-def>
+        
+        <module-def name="org.apache.myfaces.impl">
+            <maven-resource group="org.apache.myfaces.core" artifact="myfaces-impl"/>
         </module-def>
 
         <module-def name="org.apache.juddi.juddi-client">

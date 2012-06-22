@@ -196,6 +196,9 @@ class WebSubsystemParser implements XMLStreamConstants, XMLElementReader<List<Mo
         if (config.hasDefined(JSP_CONFIGURATION)) {
             containerConfigStartWritten = writeJSPConfiguration(writer, config.get(JSP_CONFIGURATION), containerConfigStartWritten) || containerConfigStartWritten;
         }
+        if (config.hasDefined(JSF_CONFIGURATION)) {
+            containerConfigStartWritten = writeJSFConfiguration(writer, config.get(JSF_CONFIGURATION), containerConfigStartWritten) || containerConfigStartWritten;
+        }
         ModelNode container = config;
         if (config.hasDefined(CONTAINER)) {
             // this has been added to get the stuff manageable
@@ -281,6 +284,35 @@ class WebSubsystemParser implements XMLStreamConstants, XMLElementReader<List<Mo
         return false;
     }
 
+    private boolean writeJSFConfiguration(XMLExtendedStreamWriter writer, ModelNode jsf, boolean containerConfigStartWritten) throws XMLStreamException {
+
+        boolean startWritten = false;
+        for (SimpleAttributeDefinition def : WebJSFDefinition.JSF_ATTRIBUTES) {
+            startWritten = writeJsfConfigAttribute(writer, def, jsf, startWritten, containerConfigStartWritten) || startWritten;
+        }
+
+        if (startWritten) {
+            writer.writeEndElement();
+        }
+
+        return startWritten;
+    }
+
+    private boolean writeJsfConfigAttribute(XMLExtendedStreamWriter writer, SimpleAttributeDefinition attribute, ModelNode config,
+                                            boolean startWritten, boolean containerConfigStartWritten) throws XMLStreamException {
+        if (attribute.isMarshallable(config, false)) {
+            if (!startWritten) {
+                if (!containerConfigStartWritten) {
+                    writer.writeStartElement(Element.CONTAINER_CONFIG.getLocalName());
+                }
+                writer.writeStartElement(Element.JSF_CONFIGURATION.getLocalName());
+            }
+            attribute.marshallAsAttribute(config, false, writer);
+            return true;
+        }
+        return false;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -313,7 +345,8 @@ class WebSubsystemParser implements XMLStreamConstants, XMLElementReader<List<Mo
         while (reader.hasNext() && reader.nextTag() != END_ELEMENT) {
             switch (Namespace.forUri(reader.getNamespaceURI())) {
                 case WEB_1_0:
-                case WEB_1_1: {
+                case WEB_1_1:
+                case WEB_1_2: {
                     final Element element = Element.forName(reader.getLocalName());
                     switch (element) {
                         case CONTAINER_CONFIG: {
@@ -354,7 +387,7 @@ class WebSubsystemParser implements XMLStreamConstants, XMLElementReader<List<Mo
         list.add(config);
         addDefaultStaticConfiguration(parent, list);
         addDefaultJSPConfiguration(parent, list);
-
+        addDefaultJSFConfiguration(parent, list);
     }
 
     private static void addDefaultJSPConfiguration(final PathAddress parent, List<ModelNode> list) {
@@ -363,6 +396,14 @@ class WebSubsystemParser implements XMLStreamConstants, XMLElementReader<List<Mo
         jsp.get(OP).set(ADD);
         jsp.get(OP_ADDR).set(jspAddress.toModelNode());
         list.add(jsp);
+    }
+
+    private static void addDefaultJSFConfiguration(final PathAddress parent, List<ModelNode> list) {
+        final PathAddress jsfAddress = PathAddress.pathAddress(parent, WebExtension.JSF_CONFIGURATION_PATH);
+        final ModelNode jsf = new ModelNode();
+        jsf.get(OP).set(ADD);
+        jsf.get(OP_ADDR).set(jsfAddress.toModelNode());
+        list.add(jsf);
     }
 
     private static void addDefaultStaticConfiguration(final PathAddress parent, List<ModelNode> list) {
@@ -387,6 +428,7 @@ class WebSubsystemParser implements XMLStreamConstants, XMLElementReader<List<Mo
         // elements
         boolean staticResourcesConfigured = false;
         boolean jspConfigured = false;
+        boolean jsfConfigured = false;
         while (reader.hasNext() && reader.nextTag() != END_ELEMENT) {
             final Element element = Element.forName(reader.getLocalName());
             switch (element) {
@@ -398,6 +440,11 @@ class WebSubsystemParser implements XMLStreamConstants, XMLElementReader<List<Mo
                 case JSP_CONFIGURATION: {
                     parseJSPConfiguration(reader, parent, list);
                     jspConfigured = true;
+                    break;
+                }
+                case JSF_CONFIGURATION: {
+                    parseJSFConfiguration(reader, parent, list);
+                    jsfConfigured = true;
                     break;
                 }
                 case MIME_MAPPING: {
@@ -423,6 +470,9 @@ class WebSubsystemParser implements XMLStreamConstants, XMLElementReader<List<Mo
         }
         if (!jspConfigured) {
             addDefaultJSPConfiguration(parent, list);
+        }
+        if (!jsfConfigured) {
+            addDefaultJSFConfiguration(parent, list);
         }
 
     }
@@ -467,6 +517,30 @@ class WebSubsystemParser implements XMLStreamConstants, XMLElementReader<List<Mo
         }
         requireNoContent(reader);
         list.add(jsp);
+    }
+
+    static void parseJSFConfiguration(XMLExtendedStreamReader reader, final PathAddress parent, List<ModelNode> list) throws XMLStreamException {
+        final PathAddress address = PathAddress.pathAddress(parent, WebExtension.JSF_CONFIGURATION_PATH);
+
+
+        final ModelNode jsf = new ModelNode();
+        jsf.get(OP).set(ADD);
+        jsf.get(OP_ADDR).set(address.toModelNode());
+        final int count = reader.getAttributeCount();
+        for (int i = 0; i < count; i++) {
+            requireNoNamespaceAttribute(reader, i);
+            final String value = reader.getAttributeValue(i);
+            final Attribute attribute = Attribute.forName(reader.getAttributeLocalName(i));
+            switch (attribute) {
+                case JSF_IMPL:
+                     jsf.get(attribute.getLocalName()).set(value);
+                     break;
+                default:
+                    throw unexpectedAttribute(reader, i);
+            }
+        }
+        requireNoContent(reader);
+        list.add(jsf);
     }
 
     static void parseStaticResources(XMLExtendedStreamReader reader, PathAddress parent, List<ModelNode> list) throws XMLStreamException {
@@ -563,7 +637,8 @@ class WebSubsystemParser implements XMLStreamConstants, XMLElementReader<List<Mo
                     }
                     break;
                 }
-                case WEB_1_1: {
+                case WEB_1_1:
+                case WEB_1_2: {
                     final Element element = Element.forName(reader.getLocalName());
                     switch (element) {
                         case ALIAS:
@@ -645,7 +720,8 @@ class WebSubsystemParser implements XMLStreamConstants, XMLElementReader<List<Mo
         while (reader.hasNext() && reader.nextTag() != END_ELEMENT) {
             switch (Namespace.forUri(reader.getNamespaceURI())) {
                 case WEB_1_0:
-                case WEB_1_1: {
+                case WEB_1_1:
+                case WEB_1_2: {
                     final Element element = Element.forName(reader.getLocalName());
                     switch (element) {
                         case CONDITION:
@@ -725,7 +801,8 @@ class WebSubsystemParser implements XMLStreamConstants, XMLElementReader<List<Mo
         while (reader.hasNext() && reader.nextTag() != END_ELEMENT) {
             switch (Namespace.forUri(reader.getNamespaceURI())) {
                 case WEB_1_0:
-                case WEB_1_1: {
+                case WEB_1_1:
+                case WEB_1_2: {
                     final Element element = Element.forName(reader.getLocalName());
                     switch (element) {
                         case DIRECTORY:
@@ -831,7 +908,8 @@ class WebSubsystemParser implements XMLStreamConstants, XMLElementReader<List<Mo
         while (reader.hasNext() && reader.nextTag() != END_ELEMENT) {
             switch (Namespace.forUri(reader.getNamespaceURI())) {
                 case WEB_1_0:
-                case WEB_1_1: {
+                case WEB_1_1:
+                case WEB_1_2: {
                     final Element element = Element.forName(reader.getLocalName());
                     switch (element) {
                         case SSL:

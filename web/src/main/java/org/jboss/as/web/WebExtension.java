@@ -48,6 +48,7 @@ public class WebExtension implements Extension {
     protected static final PathElement HOST_PATH = PathElement.pathElement(Constants.VIRTUAL_SERVER);
 
     protected static final PathElement JSP_CONFIGURATION_PATH = PathElement.pathElement(Constants.CONFIGURATION, Constants.JSP_CONFIGURATION);
+    protected static final PathElement JSF_CONFIGURATION_PATH = PathElement.pathElement(Constants.CONFIGURATION, Constants.JSF_CONFIGURATION);
     protected static final PathElement STATIC_RESOURCES_PATH = PathElement.pathElement(Constants.CONFIGURATION, Constants.STATIC_RESOURCES);
     protected static final PathElement CONTAINER_PATH = PathElement.pathElement(Constants.CONFIGURATION, Constants.CONTAINER);
 
@@ -108,6 +109,9 @@ public class WebExtension implements Extension {
         // configuration=jsp
         registration.registerSubModel(WebJSPDefinition.INSTANCE);
 
+        // configuration=jsf
+        registration.registerSubModel(WebJSFDefinition.INSTANCE);
+
         // configuration=resources
         registration.registerSubModel(WebStaticResources.INSTANCE);
 
@@ -124,6 +128,7 @@ public class WebExtension implements Extension {
      */
     @Override
     public void initializeParsers(ExtensionParsingContext context) {
+        context.setSubsystemXmlMapping(SUBSYSTEM_NAME, Namespace.WEB_1_2.getUriString(), WebSubsystemParser.getInstance());
         context.setSubsystemXmlMapping(SUBSYSTEM_NAME, Namespace.WEB_1_1.getUriString(), WebSubsystemParser.getInstance());
         context.setSubsystemXmlMapping(SUBSYSTEM_NAME, Namespace.WEB_1_0.getUriString(), WebSubsystemParser.getInstance());
     }

@@ -112,7 +112,7 @@ class WebSubsystemAdd extends AbstractBoottimeAddStepHandler {
                 processorTarget.addDeploymentProcessor(WebExtension.SUBSYSTEM_NAME, Phase.STRUCTURE, Phase.STRUCTURE_WAR, new WarStructureDeploymentProcessor(sharedWebBuilder.create(), sharedTldsBuilder));
                 processorTarget.addDeploymentProcessor(WebExtension.SUBSYSTEM_NAME, Phase.PARSE, Phase.PARSE_WEB_DEPLOYMENT, new WebParsingDeploymentProcessor());
                 processorTarget.addDeploymentProcessor(WebExtension.SUBSYSTEM_NAME, Phase.PARSE, Phase.PARSE_WEB_DEPLOYMENT_FRAGMENT, new WebFragmentParsingDeploymentProcessor());
-                processorTarget.addDeploymentProcessor(WebExtension.SUBSYSTEM_NAME, Phase.PARSE, Phase.PARSE_JSF_VERSION, new JsfVersionProcessor());
+                processorTarget.addDeploymentProcessor(WebExtension.SUBSYSTEM_NAME, Phase.PARSE, Phase.PARSE_JSF_VERSION, new JsfVersionProcessor(config.clone()));
                 processorTarget.addDeploymentProcessor(WebExtension.SUBSYSTEM_NAME, Phase.PARSE, Phase.PARSE_JBOSS_WEB_DEPLOYMENT, new JBossWebParsingDeploymentProcessor());
                 processorTarget.addDeploymentProcessor(WebExtension.SUBSYSTEM_NAME, Phase.PARSE, Phase.PARSE_TLD_DEPLOYMENT, new TldParsingDeploymentProcessor());
                 processorTarget.addDeploymentProcessor(WebExtension.SUBSYSTEM_NAME, Phase.PARSE, Phase.PARSE_ANNOTATION_WAR, new WarAnnotationDeploymentProcessor());
@@ -168,6 +168,10 @@ class WebSubsystemAdd extends AbstractBoottimeAddStepHandler {
         ModelNode unresolvedJspConf = model.get(Constants.JSP_CONFIGURATION);
         for (SimpleAttributeDefinition attr : WebJSPDefinition.JSP_ATTRIBUTES) {
             res.get(Constants.JSP_CONFIGURATION).get(attr.getName()).set(attr.resolveModelAttribute(context, unresolvedJspConf));
+        }
+        ModelNode unresolvedJsfConf = model.get(Constants.JSF_CONFIGURATION);
+        for (SimpleAttributeDefinition attr : WebJSFDefinition.JSF_ATTRIBUTES) {
+            res.get(Constants.JSF_CONFIGURATION).get(attr.getName()).set(attr.resolveModelAttribute(context, unresolvedJsfConf));
         }
 
         return res;

@@ -62,6 +62,8 @@ public interface Constants {
     String INSTANCE_ID = "instance-id";
     String JAVA_ENCODING = "java-encoding";
     String JSP_CONFIGURATION = "jsp-configuration";
+    String JSF_CONFIGURATION = "jsf-configuration";
+    String JSF_IMPL = "jsf-impl";
     String KEEP_GENERATED = "keep-generated";
     String KEY_ALIAS = "key-alias";
     String KEYSTORE_TYPE = "keystore-type";

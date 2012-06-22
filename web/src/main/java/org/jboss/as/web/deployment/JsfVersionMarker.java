@@ -29,23 +29,36 @@ import org.jboss.as.server.deployment.DeploymentUnit;
  */
 public class JsfVersionMarker {
 
-    public static final String JSF_1_2 = "Mojarra-1.2";
-    public static final String JSF_2_0 = "Mojarra-2.0";
+    private static String DEFAULT_JSF_IMPL;
+
+    public static final String Mojarra_1_2 = "Mojarra-1.2";
+    @Deprecated public static final String Mojarra_2_0 = "Mojarra-2.0";
+    public static final String Mojarra_2_x = "Mojarra-2.x";
+    public static final String MyFaces_2_x = "MyFaces-2.x";
     public static final String WAR_BUNDLES_JSF_IMPL = "WAR_BUNDLES_JSF_IMPL";
 
     private JsfVersionMarker() {
 
     }
 
+    /**
+     * Set the default JSF implementation for all deployments.
+     * @param defaultImpl The default impl;
+     */
+    public static void setDefaultJSFImpl(String defaultImpl) {
+        DEFAULT_JSF_IMPL = defaultImpl;
+    }
+
     private static AttachmentKey<String> VERSION_KEY = AttachmentKey.create(String.class);
 
-    public static void setVersion(final DeploymentUnit deploymentUnit, final String value) {
+    public static void setVersion(final DeploymentUnit deploymentUnit, String value) {
+        if (value.equals(Mojarra_2_0)) value = Mojarra_2_x;
         deploymentUnit.putAttachment(VERSION_KEY, value);
     }
 
     public static String getVersion(final DeploymentUnit deploymentUnit) {
         final String version = deploymentUnit.getAttachment(VERSION_KEY);
-        return version == null ? JSF_2_0 : version;
+        return version == null ? DEFAULT_JSF_IMPL : version;
     }
 
 }

@@ -362,4 +362,6 @@ public interface WebMessages {
     @Message(id = 18099, value = "processExpirationPassivation(): failed with exception: %s")
     String processExpirationPassivationException(String message);
 
+    @Message(id = 18100, value = "Unknown JSF Implementation: %s")
+    String unknownJSFImplException(String implName);
 }
