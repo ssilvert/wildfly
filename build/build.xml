@@ -567,6 +567,10 @@
             <maven-resource group="org.apache.httpcomponents" artifact="httpmime"/>
         </module-def>
 
+        <module-def name="org.apache.james.mime4j">
+            <maven-resource group="org.apache.james" artifact="apache-mime4j"/>
+        </module-def>
+
         <module-def name="org.apache.myfaces.api">
             <maven-resource group="org.apache.myfaces.core" artifact="myfaces-api"/>
         </module-def>
