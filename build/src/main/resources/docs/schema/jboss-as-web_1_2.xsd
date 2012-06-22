@@ -71,7 +71,6 @@
      -->
          <xs:element name="mime-mapping" minOccurs="0" maxOccurs="unbounded" type="mime-mappingType" />
          <xs:element name="welcome-file" minOccurs="0" maxOccurs="unbounded" type="xs:string" />
-         <xs:element name="default-jsf-impl" type="jsf-implType" default="Mojarra-2.x" use="required"/>
       </xs:sequence>
    </xs:complexType>
 
@@ -109,22 +108,8 @@
    </xs:complexType>
 
    <xs:complexType name="jsf-configurationType">
-      <xs:element name="jsf-impl" type="jsf-implType" default="Mojarra-2.x" use="required"/>
+      <xs:attribute name="jsf-impl" default="Mojarra-2.x" use="optional"/>
    </xs:complexType>
-
-   <xs:simpleType name="jsf-implType">
-         <xs:annotation>
-             <xs:documentation>
-                 The default JSF implementation to be used for JSF web apps.
-             </xs:documentation>
-         </xs:annotation>
-         <xs:restriction base="xs:token">
-             <xs:enumeration value="Mojarra-2.x"/>
-             <xs:enumeration value="MyFaces-2.x"/>
-             <xs:enumeration value="Mojarra-1.2"/>
-             <xs:enumeration value="WAR_BUNDLES_JSF_IMPL"/>
-         </xs:restriction>
-   </xs:simpleType>
 
 <!--
   <xs:complexType name="cgi-servletType">
