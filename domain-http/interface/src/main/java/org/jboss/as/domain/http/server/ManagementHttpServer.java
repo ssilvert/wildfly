@@ -234,8 +234,10 @@ public class ManagementHttpServer {
         List<AuthenticationMechanism> undertowMechanisms;
         if (securityRealm != null) {
             Set<AuthMechanism> mechanisms = securityRealm.getSupportedAuthenticationMechanisms();
+            System.out.println("Defined sec mechanisms=" + mechanisms);
             undertowMechanisms = new ArrayList<AuthenticationMechanism>(mechanisms.size());
             undertowMechanisms.add(wrap(new CachedAuthenticatedSessionMechanism(), null));
+            undertowMechanisms.add(wrap(new KeycloakAuthenticationMechanism(), AuthMechanism.KEYCLOAK));
             for (AuthMechanism current : mechanisms) {
                 switch (current) {
                     case CLIENT_CERT:

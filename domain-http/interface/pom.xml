@@ -39,6 +39,20 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.undertow</groupId>
+            <artifactId>undertow-servlet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-wildfly-adapter</artifactId>
+            <version>1.0-beta-1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-undertow-adapter</artifactId>
+            <version>1.0-beta-1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
           <groupId>io.undertow</groupId>
           <artifactId>undertow-core</artifactId>
         </dependency>
