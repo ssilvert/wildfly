@@ -201,7 +201,7 @@ public class ManagementHttpServer {
 
         ResourceHandlerDefinition consoleHandler = null;
         try {
-            consoleHandler = consoleMode.createConsoleHandler(consoleSlot);
+            consoleHandler = consoleMode.createConsoleHandler(consoleSlot, securityRealm);
         } catch (ModuleLoadException e) {
             ROOT_LOGGER.consoleModuleNotFound(consoleSlot == null ? "main" : consoleSlot);
         }
@@ -219,6 +219,7 @@ public class ManagementHttpServer {
             HttpHandler readinessHandler = new RedirectReadinessHandler(securityRealm, consoleHandler.getHandler(),
                     ErrorContextHandler.ERROR_CONTEXT);
             pathHandler.addPrefixPath(consoleHandler.getContext(), readinessHandler);
+            //pathHandler.addExactPath(consoleHandler.getContext() + "/App.html", new DebugHandler(readinessHandler));
         }
 
         HttpHandler readinessHandler = new DmrFailureReadinessHandler(securityRealm, secureDomainAccess(domainApiHandler, securityRealm), ErrorContextHandler.ERROR_CONTEXT);
@@ -237,7 +238,7 @@ public class ManagementHttpServer {
             System.out.println("Defined sec mechanisms=" + mechanisms);
             undertowMechanisms = new ArrayList<AuthenticationMechanism>(mechanisms.size());
             undertowMechanisms.add(wrap(new CachedAuthenticatedSessionMechanism(), null));
-            undertowMechanisms.add(wrap(new KeycloakAuthenticationMechanism(), AuthMechanism.KEYCLOAK));
+            undertowMechanisms.add(wrap(new KeycloakAuthenticationMechanism(KeycloakDeploymentFactory.getHttpEndpointDeployment()), AuthMechanism.KEYCLOAK));
             for (AuthMechanism current : mechanisms) {
                 switch (current) {
                     case CLIENT_CERT:

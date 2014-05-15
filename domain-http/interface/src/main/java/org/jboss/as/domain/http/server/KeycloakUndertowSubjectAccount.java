@@ -41,10 +41,14 @@ public class KeycloakUndertowSubjectAccount extends KeycloakUndertowAccount impl
 
     public KeycloakUndertowSubjectAccount(KeycloakPrincipal principal, RefreshableKeycloakSecurityContext session, KeycloakDeployment deployment) {
         super(principal, session, deployment);
-        ///this.subject = initSubject();
+
+        System.out.println(">>>> creating subject");
         this.subject = new Subject();
 
         String realm = deployment.getRealm();
+        System.out.println(">>>> realm=" + realm);
+        System.out.println(">>>> username=" + session.getToken().getPreferredUsername());
+        System.out.println(">>>> deployment resource=" + deployment.getResourceName());
         Set<Principal> principals = subject.getPrincipals();
         principals.add(new RealmUser(realm, session.getToken().getPreferredUsername()));
 
@@ -52,12 +56,14 @@ public class KeycloakUndertowSubjectAccount extends KeycloakUndertowAccount impl
         // Look at org.keycloak.adapters.wildfly.SecurityInfoHelper to see all
         // that Keycloak supports.
         for (String role : getRoles()) {
+            System.out.println(">>>>>> adding role:" + role);
             principals.add(new RealmGroup(realm, role));
         }
     }
 
     @Override
     public Subject getSubject() {
+        System.out.println(">>>>>>>> Getting subject");
         return this.subject;
     }
 

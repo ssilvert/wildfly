@@ -21,12 +21,9 @@ package org.jboss.as.domain.http.server;
 import io.undertow.security.api.AuthenticationMechanism;
 import io.undertow.security.api.SecurityContext;
 import io.undertow.server.HttpServerExchange;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import org.keycloak.adapters.AuthChallenge;
 import org.keycloak.adapters.AuthOutcome;
 import org.keycloak.adapters.KeycloakDeployment;
-import org.keycloak.adapters.KeycloakDeploymentBuilder;
 import static org.keycloak.adapters.undertow.ServletKeycloakAuthMech.KEYCLOAK_CHALLENGE_ATTACHMENT_KEY;
 import org.keycloak.adapters.undertow.UndertowHttpFacade;
 import org.keycloak.adapters.undertow.UndertowRequestAuthenticator;
@@ -37,16 +34,16 @@ import org.keycloak.adapters.undertow.UndertowRequestAuthenticator;
  */
 public class KeycloakAuthenticationMechanism implements AuthenticationMechanism {
 
-    private KeycloakDeployment deployment = KeycloakDeploymentBuilder.build(makeStream(getJSON()));
+    private final KeycloakDeployment deployment;
 
-    public KeycloakAuthenticationMechanism() {
-        //super(deployment, new UndertowUserSessionManagement(deployment), new ManagementConfidentialPortManager());
-        System.out.println("**** KeycloakAuthenticationMechanism created");
+    public KeycloakAuthenticationMechanism(KeycloakDeployment deployment) {
+        System.out.println("**** KeycloakAuthenticationMechanism created for " + deployment.getResourceName());
+        this.deployment = deployment;
     }
 
     @Override
     public ChallengeResult sendChallenge(HttpServerExchange exchange, SecurityContext securityContext) {
-        System.out.println("**** KeycloakAuthenticationMechanism.sendChallenge()");
+        System.out.println("**** KeycloakAuthenticationMechanism.sendChallenge() for " + deployment.getResourceName());
         System.out.println("exchange=" + exchange);
         System.out.println("securityContext=" + securityContext);
         System.out.println("exchange.getAttachment(KEYCLOAK_CHALLENGE_ATTACHMENT_KEY)=" + exchange.getAttachment(KEYCLOAK_CHALLENGE_ATTACHMENT_KEY));
@@ -61,11 +58,9 @@ public class KeycloakAuthenticationMechanism implements AuthenticationMechanism 
         return new ChallengeResult(false);
     }
 
-    //boolean authenticated = false;
-
     @Override
     public AuthenticationMechanismOutcome authenticate(HttpServerExchange exchange, SecurityContext securityContext) {
-        System.out.println("**** KeycloakAuthenticationMechanism.authenticate()");
+        System.out.println("**** KeycloakAuthenticationMechanism.authenticate() for " + deployment.getResourceName());
         System.out.println("exchange=" + exchange);
         System.out.println("securityContext from exchange=" + exchange.getSecurityContext());
         System.out.println("securityContext=" + securityContext);
@@ -95,36 +90,12 @@ public class KeycloakAuthenticationMechanism implements AuthenticationMechanism 
             return AuthenticationMechanismOutcome.NOT_AUTHENTICATED;
         }
 
-        //if (!authenticated) {
-            return AuthenticationMechanismOutcome.NOT_ATTEMPTED;
-        //} else {
-          //  return AuthenticationMechanismOutcome.AUTHENTICATED;
-        //}
+        return AuthenticationMechanismOutcome.NOT_ATTEMPTED;
     }
 
     private UndertowRequestAuthenticator createRequestAuthenticator(HttpServerExchange exchange, SecurityContext securityContext, UndertowHttpFacade facade) {
-        //public UndertowRequestAuthenticator(HttpFacade facade, KeycloakDeployment deployment, int sslRedirectPort, SecurityContext securityContext, HttpServerExchange exchange) {
-
         int sslRedirectPort = 9990;
         return new KeycloakRequestAuthenticator(facade, deployment, sslRedirectPort, securityContext, exchange);
-    }
-
-    private InputStream makeStream(String json) {
-        return new ByteArrayInputStream(json.getBytes());
-    }
-
-    private String getJSON() {
-        return "{\n" +
-"  \"realm\": \"ManagementRealm\",\n" +
-"  \"realm-public-key\": \"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqlYfaNBZ/voh9T4T7RGGsLd5/xquLBnCzSNxR8P2+hZtn1cDcvSbIg/SxjoH1FUCyQYpPOV4PHs7SgB+YqiMn10IHk/ThylJcttHTmG1odlLs+73JT43NqEuRbpnaAlqA3FZBr8nKGits2I155tIbEf0zfbjK03MmyLAs9WH0eHmVyEb9fuXYtJVs+x/3HOWFSiEpVg4hbC6Ca5K2M3TV1DFSwxGLA5KcISBot2QU+le7/0wGQiwl5pv/rcsyhXrq0SbYPCJG26T88xjOI4jEqPy/zs5UvjvrjTF8TBu/y4nSQiR7D0flF1pqEqH3HZ21RVN+3crwEisp4iQQfVHuwIDAQAB\",\n" +
-"  \"auth-server-url\": \"http://localhost:8080/auth\",\n" +
-"  \"ssl-not-required\": true,\n" +
-"  \"resource\": \"console\",\n" +
-"  \"credentials\": {\n" +
-"    \"secret\": \"17724e6d-8f91-4ecf-97ff-83d911fdeedb\"\n" +
-"  },\n" +
-"  \"use-resource-role-mappings\": true\n" +
-"}";
     }
 
 }
