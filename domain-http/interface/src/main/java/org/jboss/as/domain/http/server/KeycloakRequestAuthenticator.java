@@ -21,10 +21,8 @@ package org.jboss.as.domain.http.server;
 
 import io.undertow.security.api.SecurityContext;
 import io.undertow.server.HttpServerExchange;
-import io.undertow.server.handlers.Cookie;
-import io.undertow.server.handlers.CookieImpl;
-import java.util.HashMap;
-import java.util.Map;
+import io.undertow.server.session.Session;
+import io.undertow.util.Sessions;
 import org.keycloak.KeycloakPrincipal;
 import org.keycloak.adapters.HttpFacade;
 import org.keycloak.adapters.KeycloakAccount;
@@ -38,63 +36,39 @@ import org.keycloak.adapters.undertow.UndertowRequestAuthenticator;
  * @author Stan Silvert ssilvert@redhat.com (C) 2014 Red Hat Inc.
  */
 public class KeycloakRequestAuthenticator extends UndertowRequestAuthenticator {
-    private static final String USER_COOKIE = "keycloak-user";
-
-    //TODO: Make this thread-safe or come up with a
-    // better session management mechanism.  Possibly, we can even just do
-    // away with account caching.
-    private static final Map<String, KeycloakUndertowAccount> accountsLoggedIn = new HashMap<String, KeycloakUndertowAccount>();
+    private final KeycloakUserSessionManagement userSessionManagement;
 
     public KeycloakRequestAuthenticator(HttpFacade facade, KeycloakDeployment deployment, int sslRedirectPort,
-                                       SecurityContext securityContext, HttpServerExchange exchange) {
+                                       SecurityContext securityContext, HttpServerExchange exchange,
+                                       KeycloakUserSessionManagement userSessionManagement) {
         super(facade, deployment, sslRedirectPort, securityContext, exchange);
-        //io.undertow.util.Sessions.getOrCreateSession(exchange);
-    }
-
-    private KeycloakUndertowAccount getFirstCachedAccount() {
-        if (accountsLoggedIn.isEmpty()) return null;
-
-        String userId = accountsLoggedIn.keySet().iterator().next();
-        return accountsLoggedIn.get(userId);
+        this.userSessionManagement = userSessionManagement;
     }
 
     @Override
     protected boolean isCached() {
-        Cookie userCookie = exchange.getRequestCookies().get(USER_COOKIE);
-
-        if (userCookie == null) {
-            System.out.println("## did not find userCookie");
+        //final ServletRequestContext servletRequestContext = exchange.getAttachment(ServletRequestContext.ATTACHMENT_KEY);
+        //HttpServletRequest req = (HttpServletRequest) servletRequestContext.getServletRequest();
+        Session session = Sessions.getSession(exchange);
+        if (session == null) {
+            log.info("session was null, returning null");
             return false;
         }
-
-        String userId = userCookie.getValue();
-        System.out.println("## userId=" + userId);
-
-        KeycloakUndertowAccount account = getFirstCachedAccount(); //accountsLoggedIn.get(userId);
+        KeycloakUndertowAccount account = (KeycloakUndertowAccount)session.getAttribute(KeycloakUndertowAccount.class.getName());
         if (account == null) {
-            System.out.println("## account is null");
-            unsetCookie();
+            log.info("Account was not in session, returning null");
             return false;
         }
-
         account.setDeployment(deployment);
         if (account.isActive()) {
-            log.info("## Cached account found");
+            log.info("Cached account found");
             securityContext.authenticationComplete(account, "KEYCLOAK", false);
             propagateKeycloakContext( account);
             return true;
         }
-
-        System.out.println("## removing inactive account");
-        accountsLoggedIn.remove(userId);
-        unsetCookie();
-
+        log.info("Account was not active, returning null");
+        session.setAttribute(KeycloakUndertowAccount.class.getName(), null);
         return false;
-    }
-
-    //TODO: Is this how to unset an undertow cookie?
-    private void unsetCookie() {
-        exchange.setResponseCookie(new CookieImpl(USER_COOKIE, null));
     }
 
     @Override
@@ -106,11 +80,17 @@ public class KeycloakRequestAuthenticator extends UndertowRequestAuthenticator {
     }
 
     @Override
+    protected void completeBearerAuthentication(KeycloakPrincipal principal, RefreshableKeycloakSecurityContext session) {
+        KeycloakUndertowAccount account = new KeycloakUndertowSubjectAccount(principal, session, deployment);
+        securityContext.authenticationComplete(account, "KEYCLOAK", false);
+        propagateKeycloakContext(account);
+    }
+
+    @Override
     protected void login(KeycloakAccount account) {
-        String userId = account.getPrincipal().getName();
-        System.out.println("## login() userId=" + userId);
-        accountsLoggedIn.put(userId, (KeycloakUndertowAccount)account);
-        exchange.setResponseCookie(new CookieImpl(USER_COOKIE, userId));
+        Session session = Sessions.getOrCreateSession(exchange);
+        session.setAttribute(KeycloakUndertowAccount.class.getName(), account);
+        userSessionManagement.login(session.getSessionManager(), session, account.getPrincipal().getName());
     }
 
 }

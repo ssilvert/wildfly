@@ -47,6 +47,11 @@ import io.undertow.server.handlers.cache.CacheHandler;
 import io.undertow.server.handlers.cache.DirectBufferCache;
 import io.undertow.server.handlers.error.SimpleErrorPageHandler;
 import io.undertow.server.protocol.http.HttpOpenListener;
+import io.undertow.server.session.InMemorySessionManager;
+import io.undertow.server.session.SessionAttachmentHandler;
+import io.undertow.server.session.SessionConfig;
+import io.undertow.server.session.SessionCookieConfig;
+import io.undertow.server.session.SessionManager;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -70,6 +75,7 @@ import org.jboss.as.domain.management.SecurityRealm;
 import org.jboss.modules.Module;
 import org.jboss.modules.ModuleIdentifier;
 import org.jboss.modules.ModuleLoadException;
+import org.keycloak.adapters.KeycloakDeployment;
 import org.xnio.BufferAllocator;
 import org.xnio.ByteBufferSlicePool;
 import org.xnio.ChannelListener;
@@ -101,11 +107,23 @@ public class ManagementHttpServer {
     private volatile AcceptingChannel<SslConnection> secureServer;
     private final SecurityRealm securityRealm;
 
+    // web-console and http-endpoint share the same session manager
+    private static SessionManager sessionManager = new InMemorySessionManager("http-endpoint", 200);
+    private static SessionConfig sessionConfig = new SessionCookieConfig();
+
+    private static final KeycloakDeployment httpEndpointDeployment = KeycloakDeploymentFactory.getHttpEndpointDeployment();
+    private static final KeycloakUserSessionManagement userSessionManagement = new KeycloakUserSessionManagement(httpEndpointDeployment);
+
+
     private ManagementHttpServer(HttpOpenListener openListener, InetSocketAddress httpAddress, InetSocketAddress secureAddress, SecurityRealm securityRealm) {
         this.openListener = openListener;
         this.httpAddress = httpAddress;
         this.secureAddress = secureAddress;
         this.securityRealm = securityRealm;
+        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+        System.out.println("&& http-endpoint logoutURL=" + httpEndpointDeployment.getLogoutUrl().build());
+        System.out.println("&& web-console logoutURL="  + KeycloakDeploymentFactory.getWebConsoleDeployment().getLogoutUrl().build());
+        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
     }
 
 
@@ -227,7 +245,9 @@ public class ManagementHttpServer {
         pathHandler.addExactPath("management-upload", readinessHandler);
 
         if (securityRealm != null) {
-            pathHandler.addPrefixPath(LogoutHandler.PATH, new LogoutHandler(securityRealm.getName()));
+            //pathHandler.addPrefixPath(LogoutHandler.PATH, new LogoutHandler(securityRealm.getName()));
+            KeycloakLogoutHandler logoutHandler = new KeycloakLogoutHandler(userSessionManagement, sessionManager);
+            pathHandler.addPrefixPath(LogoutHandler.PATH, new SessionAttachmentHandler(logoutHandler, sessionManager, sessionConfig));
         }
     }
 
@@ -238,7 +258,9 @@ public class ManagementHttpServer {
             System.out.println("Defined sec mechanisms=" + mechanisms);
             undertowMechanisms = new ArrayList<AuthenticationMechanism>(mechanisms.size());
             undertowMechanisms.add(wrap(new CachedAuthenticatedSessionMechanism(), null));
-            undertowMechanisms.add(wrap(new KeycloakAuthenticationMechanism(KeycloakDeploymentFactory.getHttpEndpointDeployment()), AuthMechanism.KEYCLOAK));
+
+            undertowMechanisms.add(wrap(new KeycloakAuthenticationMechanism(httpEndpointDeployment, userSessionManagement), AuthMechanism.KEYCLOAK));
+
             for (AuthMechanism current : mechanisms) {
                 switch (current) {
                     case CLIENT_CERT:
@@ -268,8 +290,22 @@ public class ManagementHttpServer {
         // this point.
         current = new AuthenticationConstraintHandler(current);
         current = new AuthenticationMechanismsHandler(current, undertowMechanisms);
+        current = new KeycloakAuthenticatedActionsHandler(httpEndpointDeployment, current);
+        current = new SessionAttachmentHandler(current, sessionManager, sessionConfig);
 
         return new SecurityInitialHandler(AuthenticationMode.PRO_ACTIVE, new RealmIdentityManager(securityRealm), current);
+    }
+
+    static SessionManager getSessionManager() {
+        return sessionManager;
+    }
+
+    static KeycloakUserSessionManagement getKeycloakSessionManagement() {
+        return userSessionManagement;
+    }
+
+    static SessionConfig getSessionConfig() {
+        return sessionConfig;
     }
 
     private static AuthenticationMechanism wrap(final AuthenticationMechanism toWrap, final AuthMechanism mechanism) {

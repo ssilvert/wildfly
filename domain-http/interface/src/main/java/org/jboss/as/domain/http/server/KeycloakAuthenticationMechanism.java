@@ -35,10 +35,12 @@ import org.keycloak.adapters.undertow.UndertowRequestAuthenticator;
 public class KeycloakAuthenticationMechanism implements AuthenticationMechanism {
 
     private final KeycloakDeployment deployment;
+    private final KeycloakUserSessionManagement userSessionManagement;
 
-    public KeycloakAuthenticationMechanism(KeycloakDeployment deployment) {
+    public KeycloakAuthenticationMechanism(KeycloakDeployment deployment, KeycloakUserSessionManagement userSessionManagement) {
         System.out.println("**** KeycloakAuthenticationMechanism created for " + deployment.getResourceName());
         this.deployment = deployment;
+        this.userSessionManagement = userSessionManagement; //new KeycloakUserSessionManagement(deployment);
     }
 
     @Override
@@ -95,7 +97,7 @@ public class KeycloakAuthenticationMechanism implements AuthenticationMechanism 
 
     private UndertowRequestAuthenticator createRequestAuthenticator(HttpServerExchange exchange, SecurityContext securityContext, UndertowHttpFacade facade) {
         int sslRedirectPort = 9990;
-        return new KeycloakRequestAuthenticator(facade, deployment, sslRedirectPort, securityContext, exchange);
+        return new KeycloakRequestAuthenticator(facade, deployment, sslRedirectPort, securityContext, exchange, userSessionManagement);
     }
 
 }
