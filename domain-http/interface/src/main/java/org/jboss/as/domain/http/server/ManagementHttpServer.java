@@ -76,6 +76,7 @@ import org.jboss.modules.Module;
 import org.jboss.modules.ModuleIdentifier;
 import org.jboss.modules.ModuleLoadException;
 import org.keycloak.adapters.KeycloakDeployment;
+import org.keycloak.adapters.undertow.UndertowUserSessionManagement;
 import org.xnio.BufferAllocator;
 import org.xnio.ByteBufferSlicePool;
 import org.xnio.ChannelListener;
@@ -111,8 +112,8 @@ public class ManagementHttpServer {
     private static SessionManager sessionManager = new InMemorySessionManager("http-endpoint", 200);
     private static SessionConfig sessionConfig = new SessionCookieConfig();
 
-    private static final KeycloakDeployment httpEndpointDeployment = KeycloakDeploymentFactory.getHttpEndpointDeployment();
-    private static final KeycloakUserSessionManagement userSessionManagement = new KeycloakUserSessionManagement(httpEndpointDeployment);
+    private static final KeycloakDeployment httpEndpointDeployment = KeycloakConfig.HTTP_ENDPOINT.deployment();
+    private static final UndertowUserSessionManagement userSessionManagement = new UndertowUserSessionManagement();
 
 
     private ManagementHttpServer(HttpOpenListener openListener, InetSocketAddress httpAddress, InetSocketAddress secureAddress, SecurityRealm securityRealm) {
@@ -122,7 +123,7 @@ public class ManagementHttpServer {
         this.securityRealm = securityRealm;
         System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
         System.out.println("&& http-endpoint logoutURL=" + httpEndpointDeployment.getLogoutUrl().build());
-        System.out.println("&& web-console logoutURL="  + KeycloakDeploymentFactory.getWebConsoleDeployment().getLogoutUrl().build());
+        System.out.println("&& web-console logoutURL="  + KeycloakConfig.HTTP_ENDPOINT.deployment().getLogoutUrl().build());
         System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
     }
 
@@ -290,7 +291,7 @@ public class ManagementHttpServer {
         // this point.
         current = new AuthenticationConstraintHandler(current);
         current = new AuthenticationMechanismsHandler(current, undertowMechanisms);
-        current = new KeycloakAuthenticatedActionsHandler(httpEndpointDeployment, current);
+        current = new KeycloakAuthenticatedActionsHandler(KeycloakConfig.HTTP_ENDPOINT.context(), current);
         current = new SessionAttachmentHandler(current, sessionManager, sessionConfig);
 
         return new SecurityInitialHandler(AuthenticationMode.PRO_ACTIVE, new RealmIdentityManager(securityRealm), current);
@@ -300,7 +301,7 @@ public class ManagementHttpServer {
         return sessionManager;
     }
 
-    static KeycloakUserSessionManagement getKeycloakSessionManagement() {
+    static UndertowUserSessionManagement getUserSessionManagement() {
         return userSessionManagement;
     }
 

@@ -45,10 +45,41 @@
                 <socket-binding http="management-http"/>
             </http-interface>
         </management-interfaces>
-        <access-control provider="simple">
+        <access-control provider="rbac">
             <role-mapping>
+                <role name="Monitor">
+                    <include>
+                        <group alias="Monitor" name="Monitor"/>
+                    </include>
+                </role>
+                <role name="Operator">
+                    <include>
+                        <group alias="Operator" name="Operator"/>
+                    </include>
+                </role>
+                <role name="Maintainer">
+                    <include>
+                        <group alias="Maintainer" name="Maintainer"/>
+                    </include>
+                </role>
+                <role name="Deployer">
+                    <include>
+                        <group alias="Deployer" name="Deployer"/>
+                    </include>
+                </role>
+                <role name="Administrator">
+                    <include>
+                        <group alias="Administrator" name="Administrator"/>
+                    </include>
+                </role>
+                <role name="Auditor">
+                    <include>
+                        <group alias="Auditor" name="Auditor"/>
+                    </include>
+                </role>
                 <role name="SuperUser">
                     <include>
+                        <group alias="SuperUser" name="SuperUser"/>
                         <user name="$local"/>
                     </include>
                 </role>

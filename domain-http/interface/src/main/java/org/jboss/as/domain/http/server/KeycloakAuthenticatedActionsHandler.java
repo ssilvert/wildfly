@@ -20,7 +20,7 @@
 package org.jboss.as.domain.http.server;
 
 import io.undertow.server.HttpHandler;
-import org.keycloak.adapters.KeycloakDeployment;
+import org.keycloak.adapters.AdapterDeploymentContext;
 import org.keycloak.adapters.undertow.UndertowAuthenticatedActionsHandler;
 
 /**
@@ -28,7 +28,7 @@ import org.keycloak.adapters.undertow.UndertowAuthenticatedActionsHandler;
  * @author Stan Silvert ssilvert@redhat.com (C) 2014 Red Hat Inc.
  */
 public class KeycloakAuthenticatedActionsHandler extends UndertowAuthenticatedActionsHandler {
-    protected KeycloakAuthenticatedActionsHandler(KeycloakDeployment deployment, HttpHandler next) {
-        super(deployment, next);
+    protected KeycloakAuthenticatedActionsHandler(AdapterDeploymentContext context, HttpHandler next) {
+        super(context, next);
     }
 }

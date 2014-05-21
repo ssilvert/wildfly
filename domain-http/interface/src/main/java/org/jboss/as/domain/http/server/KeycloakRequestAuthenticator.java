@@ -30,17 +30,18 @@ import org.keycloak.adapters.KeycloakDeployment;
 import org.keycloak.adapters.RefreshableKeycloakSecurityContext;
 import org.keycloak.adapters.undertow.KeycloakUndertowAccount;
 import org.keycloak.adapters.undertow.UndertowRequestAuthenticator;
+import org.keycloak.adapters.undertow.UndertowUserSessionManagement;
 
 /**
  *
  * @author Stan Silvert ssilvert@redhat.com (C) 2014 Red Hat Inc.
  */
 public class KeycloakRequestAuthenticator extends UndertowRequestAuthenticator {
-    private final KeycloakUserSessionManagement userSessionManagement;
+    private final UndertowUserSessionManagement userSessionManagement;
 
     public KeycloakRequestAuthenticator(HttpFacade facade, KeycloakDeployment deployment, int sslRedirectPort,
                                        SecurityContext securityContext, HttpServerExchange exchange,
-                                       KeycloakUserSessionManagement userSessionManagement) {
+                                       UndertowUserSessionManagement userSessionManagement) {
         super(facade, deployment, sslRedirectPort, securityContext, exchange);
         this.userSessionManagement = userSessionManagement;
     }
@@ -90,7 +91,9 @@ public class KeycloakRequestAuthenticator extends UndertowRequestAuthenticator {
     protected void login(KeycloakAccount account) {
         Session session = Sessions.getOrCreateSession(exchange);
         session.setAttribute(KeycloakUndertowAccount.class.getName(), account);
-        userSessionManagement.login(session.getSessionManager(), session, account.getPrincipal().getName());
+        String username = account.getPrincipal().getName();
+        String keycloakSessionId = account.getKeycloakSecurityContext().getToken().getSessionState();
+        userSessionManagement.login(session.getSessionManager(), session.getId(), username, keycloakSessionId);
     }
 
 }

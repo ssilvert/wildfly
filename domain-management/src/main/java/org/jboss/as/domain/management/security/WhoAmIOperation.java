@@ -125,6 +125,10 @@ public class WhoAmIOperation implements OperationStepHandler {
             }
         }
 
+        System.out.println("***** WhoAmIOperation *****");
+        System.out.println("result=");
+        System.out.println(result.toString());
+        System.out.println("***************************");
         context.completeStep(OperationContext.RollbackHandler.NOOP_ROLLBACK_HANDLER);
     }
 

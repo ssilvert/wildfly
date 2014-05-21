@@ -608,6 +608,10 @@
             <maven-resource group="org.fusesource.jansi" artifact="jansi"/>
         </module-def>
 
+        <module-def name="net.iharder.base64">
+            <maven-resource group="net.iharder" artifact="base64"/>
+        </module-def>
+        
         <module-def name="net.jcip">
             <maven-resource group="net.jcip" artifact="jcip-annotations"/>
         </module-def>
@@ -1422,6 +1426,30 @@
             <maven-resource group="org.jsoup" artifact="jsoup"/>
         </module-def>
 
+        <module-def name="org.keycloak.keycloak-adapter-core">
+            <maven-resource group="org.keycloak" artifact="keycloak-adapter-core"/>
+        </module-def>
+  
+        <module-def name="org.keycloak.keycloak-core">
+            <maven-resource group="org.keycloak" artifact="keycloak-core"/>
+        </module-def>
+
+        <module-def name="org.keycloak.keycloak-jboss-adapter-core">
+            <maven-resource group="org.keycloak" artifact="keycloak-jboss-adapter-core"/>
+        </module-def>
+        
+        <module-def name="org.keycloak.keycloak-undertow-adapter">
+            <maven-resource group="org.keycloak" artifact="keycloak-undertow-adapter"/>
+        </module-def>
+        
+        <module-def name="org.keycloak.keycloak-wildfly-adapter">
+            <maven-resource group="org.keycloak" artifact="keycloak-wildfly-adapter"/>
+        </module-def>
+        
+        <module-def name="org.keycloak.keycloak-wildfly-subsystem">
+            <maven-resource group="org.keycloak" artifact="keycloak-wildfly-subsystem"/>
+        </module-def>
+        
         <module-def name="org.kohsuke.rngom">
             <maven-resource group="org.kohsuke.rngom" artifact="rngom"/>
         </module-def>

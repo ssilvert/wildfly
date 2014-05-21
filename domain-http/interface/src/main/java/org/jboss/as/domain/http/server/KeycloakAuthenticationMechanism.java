@@ -27,6 +27,7 @@ import org.keycloak.adapters.KeycloakDeployment;
 import static org.keycloak.adapters.undertow.ServletKeycloakAuthMech.KEYCLOAK_CHALLENGE_ATTACHMENT_KEY;
 import org.keycloak.adapters.undertow.UndertowHttpFacade;
 import org.keycloak.adapters.undertow.UndertowRequestAuthenticator;
+import org.keycloak.adapters.undertow.UndertowUserSessionManagement;
 
 /**
  *
@@ -35,9 +36,9 @@ import org.keycloak.adapters.undertow.UndertowRequestAuthenticator;
 public class KeycloakAuthenticationMechanism implements AuthenticationMechanism {
 
     private final KeycloakDeployment deployment;
-    private final KeycloakUserSessionManagement userSessionManagement;
+    private final UndertowUserSessionManagement userSessionManagement;
 
-    public KeycloakAuthenticationMechanism(KeycloakDeployment deployment, KeycloakUserSessionManagement userSessionManagement) {
+    public KeycloakAuthenticationMechanism(KeycloakDeployment deployment, UndertowUserSessionManagement userSessionManagement) {
         System.out.println("**** KeycloakAuthenticationMechanism created for " + deployment.getResourceName());
         this.deployment = deployment;
         this.userSessionManagement = userSessionManagement; //new KeycloakUserSessionManagement(deployment);

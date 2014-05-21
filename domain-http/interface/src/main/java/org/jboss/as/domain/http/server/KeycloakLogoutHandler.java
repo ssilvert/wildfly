@@ -32,6 +32,7 @@ import io.undertow.util.StatusCodes;
 import java.net.URI;
 import java.net.URISyntaxException;
 import org.keycloak.adapters.undertow.KeycloakUndertowAccount;
+import org.keycloak.adapters.undertow.UndertowUserSessionManagement;
 import org.keycloak.util.KeycloakUriBuilder;
 
 /**
@@ -40,10 +41,10 @@ import org.keycloak.util.KeycloakUriBuilder;
  */
 public class KeycloakLogoutHandler implements HttpHandler {
 
-    private final KeycloakUserSessionManagement userSessionManagement;
+    private final UndertowUserSessionManagement userSessionManagement;
     private final SessionManager sessionManager;
 
-    public KeycloakLogoutHandler(KeycloakUserSessionManagement userSessionManagement, SessionManager sessionManager) {
+    public KeycloakLogoutHandler(UndertowUserSessionManagement userSessionManagement, SessionManager sessionManager) {
         this.userSessionManagement = userSessionManagement;
         this.sessionManager = sessionManager;
     }
@@ -67,13 +68,14 @@ public class KeycloakLogoutHandler implements HttpHandler {
 
         String user = account.getPrincipal().getName();
         System.out.println("**** Calling logout for " + user);
-        userSessionManagement.logout(sessionManager, user);
+        userSessionManagement.logoutUser(sessionManager, user);
+        userSessionManagement.logoutKeycloakSession(sessionManager, user);
         endRequest(exchange);
     }
 
     private void endRequest(HttpServerExchange exchange) {
         final HeaderMap responseHeaders = exchange.getResponseHeaders();
-        KeycloakUriBuilder logoutUrl = KeycloakDeploymentFactory.getWebConsoleDeployment().getLogoutUrl();
+        KeycloakUriBuilder logoutUrl = KeycloakConfig.WEB_CONSOLE.deployment().getLogoutUrl();
         logoutUrl = logoutUrl.queryParam("redirect_uri", redirectUri(exchange));
         responseHeaders.add(LOCATION, logoutUrl.build().toString());
         exchange.setResponseCode(StatusCodes.TEMPORARY_REDIRECT);

@@ -1,0 +1,49 @@
+Prepare WildFly
+1. Build the latest SNAPSHOT of Keycloak master on your local machine.  The WildFly build will use the artifacts in your local Maven repo.
+2. Build this version of WildFly
+3. Run <WILDFLY_HOME>/bin/add-user.sh.  You will need to add one Management User.  You can use any user name you want.  It will not be used by Keycloak.
+
+To install Keycloak Auth Server:
+1. In keycloak, got to distribution/war-dist/target/unpacked/deployments
+2. Copy the contents of the deployments directory to <WILDFLY_HOME>/standalone/deployments
+
+To create the ManagementRealm:
+1. Start WildFly and go to http://localhost:8080/auth/admin/index.html
+2. Log in with user "admin", password "admin".  You will be prompted to change your password.
+3. Press "Add Realm"
+4. You must name the realm "ManagementRealm"
+5. Go to "Applications" and press "Add Application"
+6. Name the application "web-console".  Set the Redirect URI to "http://localhost:9990/console/*"
+7. Click on "Roles" and add one or more application roles for the web-console application.  The names of the roles must match the roles listed in http://planet.jboss.org/post/role_based_access_control_in_wildfly_8_tech_tip_120
+8. Repeat steps 5-7 for an application named "http-endpoint" with redirect URI set to "http://localhost:9990/management"
+
+Create the Keycloak config files
+1. Click on Applications->web-console->Installation and select keycloak.json
+2. Paste the contents into a new file <WILDFLY_HOME>/standalone/configuration/keycloak-web-console.json.  Make sure use-resource-role-mappings is set to true.
+3. Repeat stesp 1 and 2 for http-endpoint calling the new file keycloak-http-endpoint.json
+4. Restart WildFly so it will read the new json files.
+
+Create a Keycloak user
+1. Click on Users->Add User
+2. Pick any user name and save
+3. Under Role Mappings, select the web-console application
+4. Assign a role to the user
+5. Select http-endpoint and assign the same role
+
+Login
+1. Go to http://localhost:9990/console/ and log in.  Other console URLs such as http://localhost:9990/console/App.html will not work until you are logged in.
+2. You can also directly hit the http management endpoint by going to http://localhost:9990/management.  You will not need to log in again because the two applications are in the same realm. Single Signon!
+
+Other stuff
+* If you click on your user name in the upper righthand corner of web console you can see the role you were assigned.  You will only be allowed to view/change things that you have rights to view/change.
+* If you logout and change the role you can log back in and see that the role has changed.
+* In Keycloak admin, you can view active sessions and drill down to see who is logged in.
+
+
+
+
+
+
+
+
+

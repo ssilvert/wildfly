@@ -18,6 +18,7 @@
         <subsystem>configuration/subsystems/jpa.xml</subsystem>
         <subsystem>configuration/subsystems/jsf.xml</subsystem>
         <subsystem>configuration/subsystems/jsr77.xml</subsystem>
+        <subsystem>configuration/subsystems/keycloak.xml</subsystem>
         <subsystem>configuration/subsystems/mail.xml</subsystem>
         <subsystem>configuration/subsystems/messaging.xml</subsystem>
         <subsystem>configuration/subsystems/naming.xml</subsystem>

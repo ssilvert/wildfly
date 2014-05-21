@@ -56,6 +56,7 @@ import org.jboss.as.domain.http.server.security.RealmIdentityManager;
 import org.jboss.as.domain.management.AuthMechanism;
 import org.jboss.as.domain.management.SecurityRealm;
 import org.keycloak.adapters.KeycloakDeployment;
+import org.keycloak.adapters.undertow.UndertowUserSessionManagement;
 
 /**
  * Different modes for showing the admin console
@@ -173,8 +174,8 @@ public enum ConsoleMode {
 
         //TODO: Refactor this.  Lots of common code between this and ManagementHttpServer.secureConsoleAccess.
         static SecurityInitialHandler secureConsoleAccess(HttpHandler current, SecurityRealm securityRealm) {
-            KeycloakDeployment webConsoleDeployment = KeycloakDeploymentFactory.getWebConsoleDeployment();
-            KeycloakUserSessionManagement userSessionManagement = ManagementHttpServer.getKeycloakSessionManagement(); //new KeycloakUserSessionManagement(webConsoleDeployment);
+            KeycloakDeployment webConsoleDeployment = KeycloakConfig.WEB_CONSOLE.deployment();
+            UndertowUserSessionManagement userSessionManagement = ManagementHttpServer.getUserSessionManagement();
 
             List<AuthenticationMechanism> authMechanisms = new ArrayList<AuthenticationMechanism>();
             authMechanisms.add(new AuthenticationMechanismWrapper(new CachedAuthenticatedSessionMechanism(), null));
@@ -186,7 +187,7 @@ public enum ConsoleMode {
             // this point.
             current = new AuthenticationConstraintHandler(current);
             current = new AuthenticationMechanismsHandler(current, authMechanisms);
-            current = new KeycloakAuthenticatedActionsHandler(webConsoleDeployment, current);
+            current = new KeycloakAuthenticatedActionsHandler(KeycloakConfig.WEB_CONSOLE.context(), current);
             current = new SessionAttachmentHandler(current, ManagementHttpServer.getSessionManager(), ManagementHttpServer.getSessionConfig());
 
             return new SecurityInitialHandler(AuthenticationMode.PRO_ACTIVE, new RealmIdentityManager(securityRealm), current);
