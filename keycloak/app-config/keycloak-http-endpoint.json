@@ -1,0 +1,11 @@
+{
+  "realm": "ManagementRealm",
+  "realm-public-key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnOwdWSkGjr34fsy9I4t+QskjwuTuoOA76jcZ/+TQaoI8+bb2v5f836CGUism1saV2h8T1NJi5MLdOBQYETqNwgvpEMJPHmteKeqO/L56SDW+ToY61C5zko4iZSsIjUgPMj0Ty4dFevB24dU7jS2nQ+FTvaT/NXm3Zq74UN29DYtgTFpxOmMzF03K7dH2yxnj5dK+WNw5olxAaV8hm+4BZl8731davNyCT8ghwXfJVlitUObI7dJBXSbC8dGSwH7QvMfIJEi9bVMh9j9XKF+vymHao3s3PwU7yq3Lf77OQMYQvERioxn6dFhH6VNiCjKCBZLUFHT5OySEBbvBfJhEoQIDAQAB",
+  "auth-server-url": "http://localhost:8080/auth",
+  "ssl-not-required": true,
+  "resource": "http-endpoint",
+  "credentials": {
+    "secret": "b114222c-124e-407d-b27d-5732d0468d75"
+  },
+  "use-resource-role-mappings": true
+}
