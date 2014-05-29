@@ -1,0 +1,62 @@
+[ {
+  "id" : "6e4da0e7-837e-44ad-891a-afdfdc06f927",
+  "loginName" : "admin",
+  "emailVerified" : false,
+  "totp" : false,
+  "enabled" : true,
+  "notBefore" : 0,
+  "realmId" : "keycloak-admin",
+  "roleIds" : [ "f6601958-4784-4360-b150-e8655887a5e9", "7f93281c-eec2-4f9c-91fb-680cbe486c11", "86202127-1370-493d-86fc-744eee817dd6" ],
+  "attributes" : { },
+  "credentials" : [ {
+    "type" : "password",
+    "value" : "mR9x72IJQoRBoa1toORv5l+XPYs8AN4bjCHEez/6x6WTUTLeBXliZ08PTOF26m+eI0jFXKpKOhyK+hIPhHHW7g==",
+    "salt" : "7Q1PYmsSKvGLAK5mjZlc8Q=="
+  } ],
+  "authenticationLink" : {
+    "authUserId" : "6e4da0e7-837e-44ad-891a-afdfdc06f927",
+    "authProvider" : "model"
+  }
+}, {
+  "id" : "bf292d0d-80f1-46d3-a505-55f715ef5aa1",
+  "loginName" : "stan",
+  "firstName" : "Stan",
+  "lastName" : "Silvert",
+  "emailVerified" : false,
+  "totp" : false,
+  "enabled" : true,
+  "notBefore" : 0,
+  "realmId" : "keycloak-admin",
+  "roleIds" : [ "f6601958-4784-4360-b150-e8655887a5e9", "7f93281c-eec2-4f9c-91fb-680cbe486c11", "86202127-1370-493d-86fc-744eee817dd6" ],
+  "attributes" : { },
+  "credentials" : [ {
+    "type" : "password",
+    "value" : "Q5tslgQ6oolrQpMrIWZZlZWsW7/ZEo9HbDT0FPERD5E3cXXjycOn7ZeWGr1PD2oizWpr4EGhehr+dWwbYKU5tg==",
+    "salt" : "eQd7N6lEr05e1UVcTqbuLQ=="
+  } ],
+  "authenticationLink" : {
+    "authUserId" : "bf292d0d-80f1-46d3-a505-55f715ef5aa1",
+    "authProvider" : "model"
+  }
+}, {
+  "id" : "13ace3cb-70cd-4f97-bddc-f782e319787e",
+  "loginName" : "stan",
+  "firstName" : "Stan",
+  "lastName" : "Silvert",
+  "emailVerified" : false,
+  "totp" : false,
+  "enabled" : true,
+  "notBefore" : 0,
+  "realmId" : "6b542ab8-cfec-448f-99a7-2ef7c8b67083",
+  "roleIds" : [ "0a477084-d31e-45e0-98db-83c942db22a5", "25b169c9-c330-4fc2-8a65-730f25ea860a", "6b6037a1-0111-40b1-a0a9-58cfae814f27", "74396faa-b9df-4cf1-99f3-cc5bc7cf3997" ],
+  "attributes" : { },
+  "credentials" : [ {
+    "type" : "password",
+    "value" : "e7f9dUvU0PUdMOoWi6Q+TatWSDrx9t68JMdBB4g2WfHz4qJ20/X3HHnl3u/aOO8lov7jd2/kWrLdzQePszg84Q==",
+    "salt" : "erC1RZHwj1ARf0vF0Bahjw=="
+  } ],
+  "authenticationLink" : {
+    "authUserId" : "13ace3cb-70cd-4f97-bddc-f782e319787e",
+    "authProvider" : "model"
+  }
+} ]

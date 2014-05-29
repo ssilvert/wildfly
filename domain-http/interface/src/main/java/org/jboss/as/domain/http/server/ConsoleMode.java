@@ -1,24 +1,24 @@
 /*
-* JBoss, Home of Professional Open Source.
-* Copyright 2011, Red Hat Middleware LLC, and individual contributors
-* as indicated by the @author tags. See the copyright.txt file in the
-* distribution for a full listing of individual contributors.
-*
-* This is free software; you can redistribute it and/or modify it
-* under the terms of the GNU Lesser General Public License as
-* published by the Free Software Foundation; either version 2.1 of
-* the License, or (at your option) any later version.
-*
-* This software is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this software; if not, write to the Free
-* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-*/
+ * JBoss, Home of Professional Open Source.
+ * Copyright 2011, Red Hat Middleware LLC, and individual contributors
+ * as indicated by the @author tags. See the copyright.txt file in the
+ * distribution for a full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.jboss.as.domain.http.server;
 
 import java.io.File;
@@ -40,7 +40,23 @@ import org.wildfly.security.manager.WildFlySecurityManager;
 import static io.undertow.predicate.Predicates.not;
 import static io.undertow.predicate.Predicates.path;
 import static io.undertow.predicate.Predicates.suffixes;
-
+import io.undertow.security.api.AuthenticationMechanism;
+import io.undertow.security.api.AuthenticationMode;
+import io.undertow.security.handlers.AuthenticationCallHandler;
+import io.undertow.security.handlers.AuthenticationConstraintHandler;
+import io.undertow.security.handlers.AuthenticationMechanismsHandler;
+import io.undertow.security.handlers.SecurityInitialHandler;
+import io.undertow.security.impl.CachedAuthenticatedSessionMechanism;
+import io.undertow.server.HttpHandler;
+import io.undertow.server.session.SessionAttachmentHandler;
+import java.util.ArrayList;
+import java.util.List;
+import org.jboss.as.domain.http.server.security.AuthenticationMechanismWrapper;
+import org.jboss.as.domain.http.server.security.RealmIdentityManager;
+import org.jboss.as.domain.management.AuthMechanism;
+import org.jboss.as.domain.management.SecurityRealm;
+import org.keycloak.adapters.KeycloakDeployment;
+import org.keycloak.adapters.undertow.UndertowUserSessionManagement;
 
 /**
  * Different modes for showing the admin console
@@ -53,65 +69,67 @@ public enum ConsoleMode {
      * Show the console normally
      */
     CONSOLE {
-        @Override
-        ResourceHandlerDefinition createConsoleHandler(String slot) throws ModuleLoadException {
-            return ConsoleHandler.createConsoleHandler(slot);
-        }
+                @Override
+                ResourceHandlerDefinition createConsoleHandler(String slot, SecurityRealm securityRealm) throws ModuleLoadException {
+                    return ConsoleHandler.createConsoleHandler(slot, securityRealm);
+                }
 
-        @Override
-        public boolean hasConsole() {
-            return true;
-        }
-    },
+                @Override
+                public boolean hasConsole() {
+                    return true;
+                }
+            },
     /**
-     * If an attempt is made to go to the console show an error saying the host is a slave
+     * If an attempt is made to go to the console show an error saying the host
+     * is a slave
      */
     SLAVE_HC {
-        @Override
-        ResourceHandlerDefinition createConsoleHandler(String slot) throws ModuleLoadException {
-            return DisabledConsoleHandler.createNoConsoleForSlave(slot);
-        }
+                @Override
+                ResourceHandlerDefinition createConsoleHandler(String slot, SecurityRealm securityRealm) throws ModuleLoadException {
+                    return DisabledConsoleHandler.createNoConsoleForSlave(slot);
+                }
 
-        @Override
-        public boolean hasConsole() {
-            return false;
-        }
-    },
+                @Override
+                public boolean hasConsole() {
+                    return false;
+                }
+            },
     /**
-     * If an attempt is made to go to the console show an error saying the server/host is in admin-only mode
+     * If an attempt is made to go to the console show an error saying the
+     * server/host is in admin-only mode
      */
     ADMIN_ONLY {
-        @Override
-        ResourceHandlerDefinition createConsoleHandler(String slot) throws ModuleLoadException {
-            return DisabledConsoleHandler.createNoConsoleForAdminMode(slot);
-        }
+                @Override
+                ResourceHandlerDefinition createConsoleHandler(String slot, SecurityRealm securityRealm) throws ModuleLoadException {
+                    return DisabledConsoleHandler.createNoConsoleForAdminMode(slot);
+                }
 
-        @Override
-        public boolean hasConsole() {
-            return false;
-        }
-    },
+                @Override
+                public boolean hasConsole() {
+                    return false;
+                }
+            },
     /**
      * If an attempt is made to go to the console a 404 is shown
      */
     NO_CONSOLE {
-        @Override
-        ResourceHandlerDefinition createConsoleHandler(String slot) throws ModuleLoadException {
-            return null;
-        }
+                @Override
+                ResourceHandlerDefinition createConsoleHandler(String slot, SecurityRealm securityRealm) throws ModuleLoadException {
+                    return null;
+                }
 
-        @Override
-        public boolean hasConsole() {
-            return false;
-        }
-    };
+                @Override
+                public boolean hasConsole() {
+                    return false;
+                }
+            };
 
     /**
      * Returns a console handler for the mode
      *
      * @return the console handler, may be {@code null}
      */
-    ResourceHandlerDefinition createConsoleHandler(String slot) throws ModuleLoadException {
+    ResourceHandlerDefinition createConsoleHandler(String slot, SecurityRealm securityRealm) throws ModuleLoadException {
         throw new IllegalStateException("Not overridden for " + this);
     }
 
@@ -122,9 +140,9 @@ public enum ConsoleMode {
         throw new IllegalStateException("Not overridden for " + this);
     }
 
-
     /**
-     * An extension of the ResourceHandler to configure the handler to server up resources from the console module only.
+     * An extension of the ResourceHandler to configure the handler to server up
+     * resources from the console module only.
      *
      * @author <a href="mailto:darran.lofthouse@jboss.com">Darran Lofthouse</a>
      */
@@ -135,10 +153,10 @@ public enum ConsoleMode {
         private static final String APP_HTML = "App.html";
 
         private static final String CONSOLE_MODULE = "org.jboss.as.console";
-        private static final String CONTEXT = "/console";
+        public static final String CONTEXT = "/console";
         private static final String DEFAULT_RESOURCE = "/" + INDEX_HTML;
 
-        static ResourceHandlerDefinition createConsoleHandler(String skin) throws ModuleLoadException {
+        static ResourceHandlerDefinition createConsoleHandler(String skin, SecurityRealm securityRealm) throws ModuleLoadException {
             final ClassPathResourceManager resource = new ClassPathResourceManager(findConsoleClassLoader(Module.getCallerModuleLoader(), skin), "");
             final io.undertow.server.handlers.resource.ResourceHandler handler = new io.undertow.server.handlers.resource.ResourceHandler()
                     .setCacheTime(60 * 60 * 24 * 31)
@@ -149,8 +167,30 @@ public enum ConsoleMode {
 
             //we also need to setup the default resource redirect
             PredicateHandler predicateHandler = new PredicateHandler(path("/"), new RedirectHandler(CONTEXT + DEFAULT_RESOURCE), handler);
-            return new ResourceHandlerDefinition(CONTEXT, DEFAULT_RESOURCE, predicateHandler);
 
+            return new ResourceHandlerDefinition(CONTEXT, DEFAULT_RESOURCE, secureConsoleAccess(predicateHandler, securityRealm));
+            //return new ResourceHandlerDefinition(CONTEXT, DEFAULT_RESOURCE, predicateHandler);
+        }
+
+        //TODO: Refactor this.  Lots of common code between this and ManagementHttpServer.secureConsoleAccess.
+        static SecurityInitialHandler secureConsoleAccess(HttpHandler current, SecurityRealm securityRealm) {
+            KeycloakDeployment webConsoleDeployment = KeycloakConfig.WEB_CONSOLE.deployment();
+            UndertowUserSessionManagement userSessionManagement = ManagementHttpServer.getUserSessionManagement();
+
+            List<AuthenticationMechanism> authMechanisms = new ArrayList<AuthenticationMechanism>();
+            authMechanisms.add(new AuthenticationMechanismWrapper(new CachedAuthenticatedSessionMechanism(), null));
+            authMechanisms.add(new AuthenticationMechanismWrapper(new KeycloakAuthenticationMechanism(webConsoleDeployment, userSessionManagement), AuthMechanism.KEYCLOAK));
+
+            // If the only mechanism is the cached mechanism then no need to add these.
+            current = new AuthenticationCallHandler(current);
+            // Currently the security handlers are being added after a PATH handler so we know authentication is required by
+            // this point.
+            current = new AuthenticationConstraintHandler(current);
+            current = new AuthenticationMechanismsHandler(current, authMechanisms);
+            current = new KeycloakAuthenticatedActionsHandler(KeycloakConfig.WEB_CONSOLE.context(), current);
+            current = new SessionAttachmentHandler(current, ManagementHttpServer.getSessionManager(), ManagementHttpServer.getSessionConfig());
+
+            return new SecurityInitialHandler(AuthenticationMode.PRO_ACTIVE, new RealmIdentityManager(securityRealm), current);
         }
 
         static ClassLoader findConsoleClassLoader(ModuleLoader moduleLoader, String consoleSkin) throws ModuleLoadException {
@@ -178,7 +218,8 @@ public enum ConsoleMode {
     }
 
     /**
-     * An extension of the ResourceHandler to configure the handler to show an error page when the console has been turned off.
+     * An extension of the ResourceHandler to configure the handler to show an
+     * error page when the console has been turned off.
      */
     static class DisabledConsoleHandler {
 
@@ -200,7 +241,6 @@ public enum ConsoleMode {
             return new ResourceHandlerDefinition(CONTEXT, resource, predicateHandler);
         }
 
-
         static ResourceHandlerDefinition createNoConsoleForSlave(String slot) throws ModuleLoadException {
             return createConsoleHandler(slot, NO_CONSOLE_FOR_SLAVE);
         }
@@ -211,12 +251,12 @@ public enum ConsoleMode {
 
     }
 
-
     /**
-     * Scan filesystem looking for the slot versions of all modules with the given name.
-     * Package protected to allow unit testing.
+     * Scan filesystem looking for the slot versions of all modules with the
+     * given name. Package protected to allow unit testing.
      *
-     * @param moduleName the name portion of the target module's {@code ModuleIdentifier}
+     * @param moduleName the name portion of the target module's
+     * {@code ModuleIdentifier}
      * @return set of console versions, sorted from highest version to lowest
      */
     static SortedSet<ConsoleVersion> findConsoleVersions(String moduleName) {
@@ -267,7 +307,6 @@ public enum ConsoleMode {
         }
         return files;
     }
-
 
     protected static ClassLoader getClassLoader(final ModuleLoader moduleLoader, final String module, final String slot) throws ModuleLoadException {
         ModuleIdentifier id = ModuleIdentifier.create(module, slot);

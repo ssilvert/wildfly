@@ -21,8 +21,9 @@
  */
 package org.jboss.as.test.integration.weld.deployment.scopes;
 
+import java.io.Serializable;
 import javax.faces.view.ViewScoped;
 
 @ViewScoped
-public class ViewScopedBean {
+public class ViewScopedBean implements Serializable {
 }

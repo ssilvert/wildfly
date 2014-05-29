@@ -55,12 +55,12 @@
     <parent>
         <groupId>org.wildfly</groupId>
         <artifactId>wildfly-parent</artifactId>
-        <version>8.0.1.Final-SNAPSHOT</version>
+        <version>8.1.0.Final-SNAPSHOT</version>
     </parent>
 
     <groupId>org.wildfly</groupId>
     <artifactId>wildfly-testsuite</artifactId>
-    <version>8.0.1.Final-SNAPSHOT</version>
+    <version>8.1.0.Final-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>WildFly Test Suite: Aggregator</name>
@@ -154,6 +154,7 @@
 
         <!-- Arquillian dependency versions -->
         <version.arquillian_wildfly>${project.parent.version}</version.arquillian_wildfly>
+        <version.org.syslog4j>0.9.30</version.org.syslog4j>
         <version.saxon>8.7</version.saxon>
 
         <!-- Don't try to deploy the testsuite modules because they don't build jars -->
@@ -180,6 +181,11 @@
                 <version>1.7</version>
                 <scope>system</scope>
                 <systemPath>${java.home}/../lib/tools.jar</systemPath> <!-- since jdk7 also on MAC this is proper path -->
+            </dependency>
+            <dependency>
+                <groupId>org.syslog4j</groupId>
+                <artifactId>syslog4j</artifactId>
+                <version>${version.org.syslog4j}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -577,15 +583,6 @@
             <properties>
                 <jvm.args.securityManager>-Djava.security.manager</jvm.args.securityManager>
                 <jvm.args.securityPolicy>-Djava.security.policy=${security.policy}</jvm.args.securityPolicy>
-            </properties>
-        </profile>
-
-        <!-- Security manager. -->
-        <profile>
-            <id>ts.security.manager</id>
-            <activation><property><name>security.manager</name></property></activation>
-            <properties>
-                <jvm.args.securityManager>-Djava.security.manager</jvm.args.securityManager>
             </properties>
         </profile>
 

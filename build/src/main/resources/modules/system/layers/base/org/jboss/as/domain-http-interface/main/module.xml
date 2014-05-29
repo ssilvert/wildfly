@@ -32,6 +32,9 @@
     </resources>
 
     <dependencies>
+        <module name="org.keycloak.keycloak-core"/>
+        <module name="org.keycloak.keycloak-adapter-core"/>
+        <module name="org.keycloak.keycloak-undertow-adapter"/>
         <module name="io.undertow.core"/>
         <module name="org.wildfly.security.manager"/>
         <module name="org.jboss.as.controller"/>

@@ -4,7 +4,7 @@
         <security-realms>
             <security-realm name="ManagementRealm">
                 <authentication>
-                    <local default-user="$local" />
+                    <local default-user="$local" skip-group-loading="true" />
                     <ldap connection="LocalLdap" base-dn="ou=users,dc=group-to-principal,dc=wildfly,dc=org">
                         <username-filter attribute="uid" />
                     </ldap>
@@ -15,7 +15,7 @@
             </security-realm>
         </security-realms>
         <outbound-connections>
-            <ldap name="LocalLdap" url="ldap://localhost:10389" search-dn="uid=wildfly,dc=simple,dc=wildfly,dc=org" search-credential="password1!">
+            <ldap name="LocalLdap" url="ldap://localhost:10389" search-dn="uid=wildfly,dc=simple,dc=wildfly,dc=org" search-credential="password1!" referrals="THROW" handles-referrals-for="ldap://localhost:1234 ldaps://localhost:1235">
                 <properties>
                     <property name="one" value="two" />
                     <property name="three" value="four" />

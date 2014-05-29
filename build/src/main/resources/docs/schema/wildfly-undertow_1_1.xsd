@@ -256,6 +256,7 @@
         <xs:attribute name="worker" use="optional" type="xs:string" default="default"/>
         <xs:attribute name="directory" use="optional" type="xs:string" default="${jboss.server.log.dir}"/>
         <xs:attribute name="prefix" use="optional" type="xs:string" default="access_log"/>
+        <xs:attribute name="suffix" use="optional" type="xs:string" default=".log"/>
         <xs:attribute name="rotate" use="optional" type="xs:string" default="true"/>
     </xs:complexType>
     <xs:complexType name="errorPageType">
@@ -320,6 +321,24 @@
                 <xs:documentation>
                     <![CDATA[
                               Cookie path to use.
+                              ]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="http-only" type="xs:boolean" default="false">
+            <xs:annotation>
+                <xs:documentation>
+                    <![CDATA[
+                              Cookie httpOnly attribute
+                              ]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="secure" type="xs:boolean" default="false">
+            <xs:annotation>
+                <xs:documentation>
+                    <![CDATA[
+                              Cookie secure attribute
                               ]]>
                 </xs:documentation>
             </xs:annotation>

@@ -30,7 +30,7 @@
     <parent>
         <groupId>org.wildfly</groupId>
         <artifactId>wildfly-parent</artifactId>
-        <version>8.0.1.Final-SNAPSHOT</version>
+        <version>8.1.0.Final-SNAPSHOT</version>
     </parent>
 
     <artifactId>wildfly-build</artifactId>
@@ -49,11 +49,6 @@
 
 
     <dependencies>
-
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-        </dependency>
 
         <!-- TODO: why do we need jandex in minimal? -->
         <dependency>
@@ -409,6 +404,11 @@
                 <dependency>
                     <groupId>net.jcip</groupId>
                     <artifactId>jcip-annotations</artifactId>
+                </dependency>
+
+                <dependency>
+                    <groupId>net.iharder</groupId>
+                    <artifactId>base64</artifactId>
                 </dependency>
 
                 <dependency>
@@ -1010,7 +1010,7 @@
 
                 <dependency>
                     <groupId>org.jboss.hal</groupId>
-                    <artifactId>release-stream</artifactId>                    
+                    <artifactId>release-stream</artifactId>
                     <classifier>resources</classifier>
                 </dependency>
 
@@ -1909,7 +1909,30 @@
                     <groupId>org.jgroups</groupId>
                     <artifactId>jgroups</artifactId>
                 </dependency>
-
+            <dependency>
+                <groupId>org.keycloak</groupId>
+                <artifactId>keycloak-adapter-core</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.keycloak</groupId>
+                <artifactId>keycloak-core</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.keycloak</groupId>
+                <artifactId>keycloak-jboss-adapter-core</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.keycloak</groupId>
+                <artifactId>keycloak-undertow-adapter</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.keycloak</groupId>
+                <artifactId>keycloak-wildfly-adapter</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.keycloak</groupId>
+                <artifactId>keycloak-wildfly-subsystem</artifactId>
+            </dependency>
                 <dependency>
                     <groupId>org.kohsuke.rngom</groupId>
                     <artifactId>rngom</artifactId>
@@ -1924,37 +1947,37 @@
                     <groupId>org.picketlink</groupId>
                     <artifactId>picketlink-api</artifactId>
                 </dependency>
-            
+
                 <dependency>
                     <groupId>org.picketlink</groupId>
                     <artifactId>picketlink-impl</artifactId>
                 </dependency>
-            
+
                 <dependency>
                     <groupId>org.picketlink</groupId>
                     <artifactId>picketlink-federation</artifactId>
                 </dependency>
-            
+
                 <dependency>
                     <groupId>org.picketlink</groupId>
                     <artifactId>picketlink-common</artifactId>
                 </dependency>
-            
+
                 <dependency>
                     <groupId>org.picketlink</groupId>
                     <artifactId>picketlink-config</artifactId>
                 </dependency>
-            
+
                 <dependency>
                     <groupId>org.picketlink</groupId>
                     <artifactId>picketlink-idm-api</artifactId>
                 </dependency>
-            
+
                 <dependency>
                     <groupId>org.picketlink</groupId>
                     <artifactId>picketlink-idm-impl</artifactId>
                 </dependency>
-    
+
                 <dependency>
                     <groupId>org.picketlink.distribution</groupId>
                     <artifactId>picketlink-jbas7</artifactId>

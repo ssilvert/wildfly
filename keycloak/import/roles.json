@@ -1,0 +1,221 @@
+[ {
+  "id" : "f6601958-4784-4360-b150-e8655887a5e9",
+  "name" : "admin",
+  "compositeRoleIds" : [ "cf227c4a-750c-463e-b329-0aeb75f0a20d", "1238af0e-b903-4ccb-96f9-e9fdc2f6c854", "f701fea0-4f61-428f-9240-142aad82255a", "7de1f904-4b59-40b4-84bc-bf1a5cab4c92", "a464c8b6-0fc4-4e27-9844-7cac6b7e8a92", "310afaa0-fc49-4a22-a476-3e39d50f7506", "9631919a-8ee2-4820-ae22-9c3274802079", "ccc27596-419f-4140-88dc-08e95c4c3c30", "7a28bfc8-cb16-4f38-9db9-7790d386590e", "4285623a-708e-469a-9e61-61d0b98444a8", "99683d2f-c5bf-4814-9b84-be080eec121d", "0c2b667c-2609-49ac-9abd-1b9bd2fb6236", "dd5fa907-f8e3-47d0-b701-9a9888cf02e2", "f8ba3920-24ba-4901-9ba2-b3ab44c1fc6f", "e2475e98-2a33-4dd4-9440-fd2b968a8327", "2308bce4-c94b-4011-9236-975cf56b2e39", "85523518-6e6e-4f8a-b235-f12282897e9e", "ba996213-5679-4de9-b023-b71db776c2e5", "1479092a-be88-4fd4-bc0a-e46f5dbf4cdf", "f21bc0a6-4488-4950-b674-32cba389c6b7", "1b8e7cd2-9fa4-4d47-9758-340ce301ade2" ],
+  "realmId" : "keycloak-admin"
+}, {
+  "id" : "1479092a-be88-4fd4-bc0a-e46f5dbf4cdf",
+  "name" : "create-realm",
+  "realmId" : "keycloak-admin"
+}, {
+  "id" : "dd5fa907-f8e3-47d0-b701-9a9888cf02e2",
+  "name" : "manage-realm",
+  "applicationId" : "1f77b80d-aedf-49d2-9dbb-45690cc5fd5d"
+}, {
+  "id" : "1238af0e-b903-4ccb-96f9-e9fdc2f6c854",
+  "name" : "view-applications",
+  "applicationId" : "1f77b80d-aedf-49d2-9dbb-45690cc5fd5d"
+}, {
+  "id" : "f701fea0-4f61-428f-9240-142aad82255a",
+  "name" : "view-audit",
+  "applicationId" : "1f77b80d-aedf-49d2-9dbb-45690cc5fd5d"
+}, {
+  "id" : "a464c8b6-0fc4-4e27-9844-7cac6b7e8a92",
+  "name" : "manage-audit",
+  "applicationId" : "1f77b80d-aedf-49d2-9dbb-45690cc5fd5d"
+}, {
+  "id" : "2308bce4-c94b-4011-9236-975cf56b2e39",
+  "name" : "manage-clients",
+  "applicationId" : "1f77b80d-aedf-49d2-9dbb-45690cc5fd5d"
+}, {
+  "id" : "7de1f904-4b59-40b4-84bc-bf1a5cab4c92",
+  "name" : "manage-users",
+  "applicationId" : "1f77b80d-aedf-49d2-9dbb-45690cc5fd5d"
+}, {
+  "id" : "e2475e98-2a33-4dd4-9440-fd2b968a8327",
+  "name" : "view-users",
+  "applicationId" : "1f77b80d-aedf-49d2-9dbb-45690cc5fd5d"
+}, {
+  "id" : "9631919a-8ee2-4820-ae22-9c3274802079",
+  "name" : "view-clients",
+  "applicationId" : "1f77b80d-aedf-49d2-9dbb-45690cc5fd5d"
+}, {
+  "id" : "ccc27596-419f-4140-88dc-08e95c4c3c30",
+  "name" : "view-realm",
+  "applicationId" : "1f77b80d-aedf-49d2-9dbb-45690cc5fd5d"
+}, {
+  "id" : "f21bc0a6-4488-4950-b674-32cba389c6b7",
+  "name" : "manage-applications",
+  "applicationId" : "1f77b80d-aedf-49d2-9dbb-45690cc5fd5d"
+}, {
+  "id" : "7f93281c-eec2-4f9c-91fb-680cbe486c11",
+  "name" : "manage-account",
+  "applicationId" : "b3c41eec-3410-4cef-bef7-c71846e35436"
+}, {
+  "id" : "86202127-1370-493d-86fc-744eee817dd6",
+  "name" : "view-profile",
+  "applicationId" : "b3c41eec-3410-4cef-bef7-c71846e35436"
+}, {
+  "id" : "cf227c4a-750c-463e-b329-0aeb75f0a20d",
+  "name" : "view-users",
+  "applicationId" : "725e74ec-87f1-4367-bbbe-44f6555e70a4"
+}, {
+  "id" : "f8ba3920-24ba-4901-9ba2-b3ab44c1fc6f",
+  "name" : "view-clients",
+  "applicationId" : "725e74ec-87f1-4367-bbbe-44f6555e70a4"
+}, {
+  "id" : "310afaa0-fc49-4a22-a476-3e39d50f7506",
+  "name" : "view-applications",
+  "applicationId" : "725e74ec-87f1-4367-bbbe-44f6555e70a4"
+}, {
+  "id" : "7a28bfc8-cb16-4f38-9db9-7790d386590e",
+  "name" : "manage-audit",
+  "applicationId" : "725e74ec-87f1-4367-bbbe-44f6555e70a4"
+}, {
+  "id" : "85523518-6e6e-4f8a-b235-f12282897e9e",
+  "name" : "manage-clients",
+  "applicationId" : "725e74ec-87f1-4367-bbbe-44f6555e70a4"
+}, {
+  "id" : "4285623a-708e-469a-9e61-61d0b98444a8",
+  "name" : "view-realm",
+  "applicationId" : "725e74ec-87f1-4367-bbbe-44f6555e70a4"
+}, {
+  "id" : "ba996213-5679-4de9-b023-b71db776c2e5",
+  "name" : "manage-applications",
+  "applicationId" : "725e74ec-87f1-4367-bbbe-44f6555e70a4"
+}, {
+  "id" : "99683d2f-c5bf-4814-9b84-be080eec121d",
+  "name" : "manage-users",
+  "applicationId" : "725e74ec-87f1-4367-bbbe-44f6555e70a4"
+}, {
+  "id" : "1b8e7cd2-9fa4-4d47-9758-340ce301ade2",
+  "name" : "manage-realm",
+  "applicationId" : "725e74ec-87f1-4367-bbbe-44f6555e70a4"
+}, {
+  "id" : "0c2b667c-2609-49ac-9abd-1b9bd2fb6236",
+  "name" : "view-audit",
+  "applicationId" : "725e74ec-87f1-4367-bbbe-44f6555e70a4"
+}, {
+  "id" : "32082ec6-bb2f-415f-a4e5-c5ca9da3dbb7",
+  "name" : "manage-realm",
+  "applicationId" : "066cf749-99c7-4dbc-b371-ead89875371e"
+}, {
+  "id" : "41037e17-a6ab-4cbd-9a86-5bd65148a665",
+  "name" : "view-audit",
+  "applicationId" : "066cf749-99c7-4dbc-b371-ead89875371e"
+}, {
+  "id" : "af69d71f-081c-4565-9271-b56a2b9effbf",
+  "name" : "view-clients",
+  "applicationId" : "066cf749-99c7-4dbc-b371-ead89875371e"
+}, {
+  "id" : "0c86a4df-a2b0-4fc3-9e96-7bb3d31b02b2",
+  "name" : "manage-users",
+  "applicationId" : "066cf749-99c7-4dbc-b371-ead89875371e"
+}, {
+  "id" : "9d492d8e-876a-4694-801d-26f75e5e0046",
+  "name" : "manage-clients",
+  "applicationId" : "066cf749-99c7-4dbc-b371-ead89875371e"
+}, {
+  "id" : "2d5fb38f-d7a1-412c-b892-8dfd81fcc004",
+  "name" : "manage-applications",
+  "applicationId" : "066cf749-99c7-4dbc-b371-ead89875371e"
+}, {
+  "id" : "ae7accc8-bd52-46c3-b461-7b7649c16ac7",
+  "name" : "view-realm",
+  "applicationId" : "066cf749-99c7-4dbc-b371-ead89875371e"
+}, {
+  "id" : "4c3e48e0-b7eb-4d3b-a8c8-cfaeb7bd573f",
+  "name" : "view-applications",
+  "applicationId" : "066cf749-99c7-4dbc-b371-ead89875371e"
+}, {
+  "id" : "4ae08618-9709-4c44-8be8-f320db248c70",
+  "name" : "manage-audit",
+  "applicationId" : "066cf749-99c7-4dbc-b371-ead89875371e"
+}, {
+  "id" : "b420906e-5c10-4194-916c-aa7b96712ad6",
+  "name" : "view-users",
+  "applicationId" : "066cf749-99c7-4dbc-b371-ead89875371e"
+}, {
+  "id" : "84d14f51-6c69-4cbd-9530-340dd8da6d84",
+  "name" : "realm-admin",
+  "compositeRoleIds" : [ "32082ec6-bb2f-415f-a4e5-c5ca9da3dbb7", "41037e17-a6ab-4cbd-9a86-5bd65148a665", "af69d71f-081c-4565-9271-b56a2b9effbf", "0c86a4df-a2b0-4fc3-9e96-7bb3d31b02b2", "9d492d8e-876a-4694-801d-26f75e5e0046", "2d5fb38f-d7a1-412c-b892-8dfd81fcc004", "ae7accc8-bd52-46c3-b461-7b7649c16ac7", "4c3e48e0-b7eb-4d3b-a8c8-cfaeb7bd573f", "4ae08618-9709-4c44-8be8-f320db248c70", "b420906e-5c10-4194-916c-aa7b96712ad6" ],
+  "applicationId" : "066cf749-99c7-4dbc-b371-ead89875371e"
+}, {
+  "id" : "25b169c9-c330-4fc2-8a65-730f25ea860a",
+  "name" : "view-profile",
+  "applicationId" : "869667f9-49a5-4e78-8044-f62c33e0d9cb"
+}, {
+  "id" : "6b6037a1-0111-40b1-a0a9-58cfae814f27",
+  "name" : "manage-account",
+  "applicationId" : "869667f9-49a5-4e78-8044-f62c33e0d9cb"
+}, {
+  "id" : "47cacfd7-1ad5-4b53-bcad-26443594daaa",
+  "name" : "Administrator",
+  "description" : "All permissions of Maintainer\nView and modify sensitive data such as access control system\nNo access to administrative audit logging system",
+  "applicationId" : "a403dc15-cfb6-48d6-89e6-37a5d25700ad"
+}, {
+  "id" : "bbd8bcd7-34f2-45e2-92f2-df377b3d934d",
+  "name" : "Deployer",
+  "description" : "All permissions of Maintainer\nPermission is restricted to applications only, cannot make changes to container configuration",
+  "applicationId" : "a403dc15-cfb6-48d6-89e6-37a5d25700ad"
+}, {
+  "id" : "2b19deb3-0168-4032-8f09-fbc9bfc2c427",
+  "name" : "Auditor",
+  "description" : "All permissions of Monitor\nView and modify resources to administrative audit logging system\nCannot modify sensitive resources or data outside auditing, can read any sensitive data",
+  "applicationId" : "a403dc15-cfb6-48d6-89e6-37a5d25700ad"
+}, {
+  "id" : "425a7b0d-643f-4907-ad81-e2c0a16a15e9",
+  "name" : "Operator",
+  "description" : "All permissions of Monitor\nCan modify the runtime state, e.g. reload or shutdown the server, pause/resume JMS destination, flush database connection pool.\nDoes not have permission to modify persistent state.",
+  "applicationId" : "a403dc15-cfb6-48d6-89e6-37a5d25700ad"
+}, {
+  "id" : "a4c4dd0d-e75f-43fc-b4d4-9226ae4021c4",
+  "name" : "Monitor",
+  "description" : "Has the fewest permissions\nOnly read configuration and current runtime state\nNo access to sensitive resources or data or audit logging resources",
+  "applicationId" : "a403dc15-cfb6-48d6-89e6-37a5d25700ad"
+}, {
+  "id" : "74396faa-b9df-4cf1-99f3-cc5bc7cf3997",
+  "name" : "SuperUser",
+  "description" : "Has all the permissions\nEquivalent to administrator in previous versions",
+  "applicationId" : "a403dc15-cfb6-48d6-89e6-37a5d25700ad"
+}, {
+  "id" : "5f679cde-45b2-467a-9c88-28b6350602c1",
+  "name" : "Maintainer",
+  "description" : "All permissions of Operator\nCan modify the persistent state, e.g. deploy an application, setting up new data sources, add a JMS destination",
+  "applicationId" : "a403dc15-cfb6-48d6-89e6-37a5d25700ad"
+}, {
+  "id" : "4be7ff6a-43a8-4669-a11f-866ef7af663f",
+  "name" : "Administrator",
+  "description" : "All permissions of Maintainer\nView and modify sensitive data such as access control system\nNo access to administrative audit logging system",
+  "applicationId" : "6cc241a0-3bee-4a3c-af0f-1971903b31ac"
+}, {
+  "id" : "0a477084-d31e-45e0-98db-83c942db22a5",
+  "name" : "SuperUser",
+  "description" : "Has all the permissions\nEquivalent to administrator in previous versions",
+  "applicationId" : "6cc241a0-3bee-4a3c-af0f-1971903b31ac"
+}, {
+  "id" : "79cd92b1-c700-4252-ab2d-1c1014132d24",
+  "name" : "Maintainer",
+  "description" : "All permissions of Operator\nCan modify the persistent state, e.g. deploy an application, setting up new data sources, add a JMS destination",
+  "applicationId" : "6cc241a0-3bee-4a3c-af0f-1971903b31ac"
+}, {
+  "id" : "2aeb1685-91b9-431d-93dd-c8d7009ca29c",
+  "name" : "Monitor",
+  "description" : "Has the fewest permissions\nOnly read configuration and current runtime state\nNo access to sensitive resources or data or audit logging resources",
+  "applicationId" : "6cc241a0-3bee-4a3c-af0f-1971903b31ac"
+}, {
+  "id" : "6595c5f8-bcca-4713-bc88-3b52a950eee6",
+  "name" : "Auditor",
+  "description" : "All permissions of Monitor\nView and modify resources to administrative audit logging system\nCannot modify sensitive resources or data outside auditing, can read any sensitive data",
+  "applicationId" : "6cc241a0-3bee-4a3c-af0f-1971903b31ac"
+}, {
+  "id" : "4debff96-233a-4dd7-aed9-f0d133d3fd58",
+  "name" : "Operator",
+  "description" : "All permissions of Monitor\nCan modify the runtime state, e.g. reload or shutdown the server, pause/resume JMS destination, flush database connection pool.\nDoes not have permission to modify persistent state.",
+  "applicationId" : "6cc241a0-3bee-4a3c-af0f-1971903b31ac"
+}, {
+  "id" : "1f5ee627-8bca-40ff-86eb-bceffa4c4006",
+  "name" : "Deployer",
+  "description" : "All permissions of Maintainer\nPermission is restricted to applications only, cannot make changes to container configuration",
+  "applicationId" : "6cc241a0-3bee-4a3c-af0f-1971903b31ac"
+} ]

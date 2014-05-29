@@ -14,6 +14,8 @@ SYNOPSIS
     history         - display the patching history
     info            - information about the active patches
     rollback        - rollback a patch that has been applied
+    inspect         - fetch and print key information from the patch.xml
+                      of the specified patch file
 
 	and <action_arguments> depends on the <action>
 
@@ -36,11 +38,8 @@ ACTION: rollback
 
     Rollback a patch that has been applied
 
-    NOTE: by default this operation will restore all *.xml files in the
-          configuration directories to the state when the patch was applied.
-
-    patch rollback --patch-id=<id>
-      [--reset-configuration=(true|false)]
+    patch rollback  --reset-configuration=(true|false)
+      [--patch-id=<id>]
       [--rollback-to]
       [--override-all]
       [--override-modules]
@@ -48,7 +47,8 @@ ACTION: rollback
       [--preserve=path(,path)*]
       [--host=<host>]
 
-    --patch-id=<id>      - the ID of the patch to rollback
+    --patch-id=<id>      - the ID of the patch to rollback; for backward
+                           compatibility.
 
     --reset-configuration  - The argument is required for the rollback action
                              and expects a boolean value.
@@ -76,6 +76,17 @@ ACTION: history
 
     patch history
       [--host=<host>]
+
+ACTION: inspect
+
+    Fetches key information (patch id, patch type, target identity name
+    and version, description) from the patch.xml of the specified patch file.
+
+    patch inspect <file_path>
+
+    <file_path>          - the path to the patch to inspect.
+                           The path can be either absolute or relative to the
+                           current directory.
 
 DESCRIPTION
 

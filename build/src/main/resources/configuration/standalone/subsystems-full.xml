@@ -18,6 +18,7 @@
         <subsystem>configuration/subsystems/jpa.xml</subsystem>
         <subsystem>configuration/subsystems/jsf.xml</subsystem>
         <subsystem>configuration/subsystems/jsr77.xml</subsystem>
+        <subsystem>configuration/subsystems/keycloak.xml</subsystem>
         <subsystem>configuration/subsystems/mail.xml</subsystem>
         <subsystem>configuration/subsystems/messaging.xml</subsystem>
         <subsystem>configuration/subsystems/naming.xml</subsystem>
@@ -27,7 +28,6 @@
         <subsystem>configuration/subsystems/sar.xml</subsystem>
         <subsystem include-if-set="security.manager">configuration/subsystems/security-manager.xml</subsystem>
         <subsystem supplement="standalone">configuration/subsystems/security.xml</subsystem>
-        <subsystem>configuration/subsystems/threads.xml</subsystem>
         <subsystem>configuration/subsystems/transactions.xml</subsystem>
         <subsystem>configuration/subsystems/undertow.xml</subsystem>
         <subsystem>configuration/subsystems/webservices.xml</subsystem>

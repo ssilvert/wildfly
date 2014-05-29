@@ -608,6 +608,10 @@
             <maven-resource group="org.fusesource.jansi" artifact="jansi"/>
         </module-def>
 
+        <module-def name="net.iharder.base64">
+            <maven-resource group="net.iharder" artifact="base64"/>
+        </module-def>
+        
         <module-def name="net.jcip">
             <maven-resource group="net.jcip" artifact="jcip-annotations"/>
         </module-def>
@@ -774,7 +778,7 @@
         </module-def>
 
         <module-def name="org.glassfish.javax.el">
-            <maven-resource group="org.glassfish" artifact="javax.el"/>
+            <maven-resource-with-filtering group="org.glassfish" artifact="javax.el" excludes="javax/**"/>
         </module-def>
 
         <module-def name="org.glassfish.javax.enterprise.concurrent">
@@ -1243,19 +1247,19 @@
         </module-def>
 
         <module-def name="org.jboss.resteasy.resteasy-atom-provider">
-            <maven-resource group="org.jboss.resteasy" artifact="resteasy-atom-provider"/>
+            <maven-resource group="org.jboss.resteasy" artifact="resteasy-atom-provider" jandex="true"/>
         </module-def>
 
         <module-def name="org.jboss.resteasy.resteasy-cdi">
-            <maven-resource group="org.jboss.resteasy" artifact="resteasy-cdi"/>
+            <maven-resource group="org.jboss.resteasy" artifact="resteasy-cdi" jandex="true"/>
         </module-def>
 
         <module-def name="org.jboss.resteasy.resteasy-crypto">
-            <maven-resource group="org.jboss.resteasy" artifact="resteasy-crypto"/>
+            <maven-resource group="org.jboss.resteasy" artifact="resteasy-crypto" jandex="true"/>
         </module-def>
 
         <module-def name="org.jboss.resteasy.resteasy-jackson-provider">
-            <maven-resource group="org.jboss.resteasy" artifact="resteasy-jackson-provider"/>
+            <maven-resource group="org.jboss.resteasy" artifact="resteasy-jackson-provider" jandex="true"/>
         </module-def>
 
         <module-def name="org.jboss.resteasy.resteasy-jackson2-provider">
@@ -1263,15 +1267,15 @@
         </module-def>
 
         <module-def name="org.jboss.resteasy.resteasy-json-p-provider">
-            <maven-resource group="org.jboss.resteasy" artifact="resteasy-json-p-provider"/>
+            <maven-resource group="org.jboss.resteasy" artifact="resteasy-json-p-provider" jandex="true"/>
         </module-def>
 
         <module-def name="org.jboss.resteasy.resteasy-jaxb-provider">
-            <maven-resource group="org.jboss.resteasy" artifact="resteasy-jaxb-provider"/>
+            <maven-resource group="org.jboss.resteasy" artifact="resteasy-jaxb-provider" jandex="true"/>
         </module-def>
 
         <module-def name="org.jboss.resteasy.resteasy-jettison-provider">
-            <maven-resource group="org.jboss.resteasy" artifact="resteasy-jettison-provider"/>
+            <maven-resource group="org.jboss.resteasy" artifact="resteasy-jettison-provider" jandex="true"/>
         </module-def>
 
         <module-def name="org.jboss.resteasy.resteasy-jaxrs">
@@ -1281,21 +1285,21 @@
         </module-def>
 
         <module-def name="org.jboss.resteasy.resteasy-jsapi">
-            <maven-resource group="org.jboss.resteasy" artifact="resteasy-jsapi"/>
+            <maven-resource group="org.jboss.resteasy" artifact="resteasy-jsapi" jandex="true"/>
         </module-def>
 
         <module-def name="org.jboss.resteasy.resteasy-multipart-provider">
-            <maven-resource group="org.jboss.resteasy" artifact="resteasy-multipart-provider"/>
+            <maven-resource group="org.jboss.resteasy" artifact="resteasy-multipart-provider" jandex="true"/>
         </module-def>
 
         <module-def name="org.jboss.resteasy.resteasy-spring"/>
 
         <module-def name="org.jboss.resteasy.resteasy-validator-provider-11">
-            <maven-resource group="org.jboss.resteasy" artifact="resteasy-validator-provider-11"/>
+            <maven-resource group="org.jboss.resteasy" artifact="resteasy-validator-provider-11" jandex="true"/>
         </module-def>
 
         <module-def name="org.jboss.resteasy.resteasy-yaml-provider">
-            <maven-resource group="org.jboss.resteasy" artifact="resteasy-yaml-provider"/>
+            <maven-resource group="org.jboss.resteasy" artifact="resteasy-yaml-provider" jandex="true"/>
         </module-def>
 
         <module-def name="org.jboss.security.negotiation">
@@ -1422,6 +1426,30 @@
             <maven-resource group="org.jsoup" artifact="jsoup"/>
         </module-def>
 
+        <module-def name="org.keycloak.keycloak-adapter-core">
+            <maven-resource group="org.keycloak" artifact="keycloak-adapter-core"/>
+        </module-def>
+  
+        <module-def name="org.keycloak.keycloak-core">
+            <maven-resource group="org.keycloak" artifact="keycloak-core"/>
+        </module-def>
+
+        <module-def name="org.keycloak.keycloak-jboss-adapter-core">
+            <maven-resource group="org.keycloak" artifact="keycloak-jboss-adapter-core"/>
+        </module-def>
+        
+        <module-def name="org.keycloak.keycloak-undertow-adapter">
+            <maven-resource group="org.keycloak" artifact="keycloak-undertow-adapter"/>
+        </module-def>
+        
+        <module-def name="org.keycloak.keycloak-wildfly-adapter">
+            <maven-resource group="org.keycloak" artifact="keycloak-wildfly-adapter"/>
+        </module-def>
+        
+        <module-def name="org.keycloak.keycloak-wildfly-subsystem">
+            <maven-resource group="org.keycloak" artifact="keycloak-wildfly-subsystem"/>
+        </module-def>
+        
         <module-def name="org.kohsuke.rngom">
             <maven-resource group="org.kohsuke.rngom" artifact="rngom"/>
         </module-def>
