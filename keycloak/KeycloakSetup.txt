@@ -1,7 +1,12 @@
 Prepare WildFly
 1. Build the latest SNAPSHOT of Keycloak master on your local machine.  The WildFly build will use the artifacts in your local Maven repo.
 2. Build this version of WildFly
-3. Run <WILDFLY_HOME>/bin/add-user.sh.  You will need to add one Management User.  You can use any user name you want.  It will not be used by Keycloak.
+3. Run <WILDFLY_HOME>/keycloak/kc-setup.sh and proceed with "Import the ManagementRealm and start WildFly" step
+
+If you are on Windows and can't run shell script, do it manually
+
+Add Management User
+1. Run <WILDFLY_HOME>/bin/add-user.sh.  You will need to add one Management User.  You can use any user name you want.  It will not be used by Keycloak.
 
 Copy the Keycloak Auth Server
 1. In keycloak, go to distribution/war-dist/target/unpacked/deployments
