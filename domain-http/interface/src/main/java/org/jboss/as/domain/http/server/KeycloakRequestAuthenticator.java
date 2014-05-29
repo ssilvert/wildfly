@@ -67,8 +67,8 @@ public class KeycloakRequestAuthenticator extends UndertowRequestAuthenticator {
             propagateKeycloakContext( account);
             return true;
         }
-        log.info("Account was not active, returning null");
-        session.setAttribute(KeycloakUndertowAccount.class.getName(), null);
+        log.info("Account was not active, returning false");
+        session.removeAttribute(KeycloakUndertowAccount.class.getName());
         return false;
     }
 
