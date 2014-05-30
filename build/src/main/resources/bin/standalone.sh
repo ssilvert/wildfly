@@ -185,6 +185,11 @@ if $cygwin; then
     JBOSS_CONFIG_DIR=`cygpath --path --windows "$JBOSS_CONFIG_DIR"`
 fi
 
+# If first time run then import Keycloak master realm
+if [ ! -d $JBOSS_CONFIG_DIR/data ]; then
+    JAVA_OPTS="-Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=../../../../keycloak/import $JAVA_OPTS"
+fi
+
 if [ "$PRESERVE_JAVA_OPTS" != "true" ]; then
     # Check for -d32/-d64 in JAVA_OPTS
     JVM_D64_OPTION=`echo $JAVA_OPTS | $GREP "\-d64"`

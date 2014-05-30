@@ -2,11 +2,11 @@
   "id" : "f6601958-4784-4360-b150-e8655887a5e9",
   "name" : "admin",
   "compositeRoleIds" : [ "dd5fa907-f8e3-47d0-b701-9a9888cf02e2", "1238af0e-b903-4ccb-96f9-e9fdc2f6c854", "f701fea0-4f61-428f-9240-142aad82255a", "2308bce4-c94b-4011-9236-975cf56b2e39", "e2475e98-2a33-4dd4-9440-fd2b968a8327", "a464c8b6-0fc4-4e27-9844-7cac6b7e8a92", "7de1f904-4b59-40b4-84bc-bf1a5cab4c92", "9631919a-8ee2-4820-ae22-9c3274802079", "ccc27596-419f-4140-88dc-08e95c4c3c30", "1479092a-be88-4fd4-bc0a-e46f5dbf4cdf", "f21bc0a6-4488-4950-b674-32cba389c6b7" ],
-  "realmId" : "keycloak-admin"
+  "realmId" : "master"
 }, {
   "id" : "1479092a-be88-4fd4-bc0a-e46f5dbf4cdf",
   "name" : "create-realm",
-  "realmId" : "keycloak-admin"
+  "realmId" : "master"
 }, {
   "id" : "dd5fa907-f8e3-47d0-b701-9a9888cf02e2",
   "name" : "manage-realm",

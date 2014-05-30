@@ -1,6 +1,6 @@
 [ {
-  "id" : "keycloak-admin",
-  "name" : "keycloak-admin",
+  "id" : "master",
+  "name" : "master",
   "enabled" : true,
   "sslNotRequired" : true,
   "registrationAllowed" : false,

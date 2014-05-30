@@ -5,7 +5,7 @@
   "totp" : false,
   "enabled" : true,
   "notBefore" : 0,
-  "realmId" : "keycloak-admin",
+  "realmId" : "master",
   "roleIds" : [ "f6601958-4784-4360-b150-e8655887a5e9", "7f93281c-eec2-4f9c-91fb-680cbe486c11", "86202127-1370-493d-86fc-744eee817dd6" ],
   "attributes" : { },
   "credentials" : [ {
@@ -26,7 +26,7 @@
   "totp" : false,
   "enabled" : true,
   "notBefore" : 0,
-  "realmId" : "keycloak-admin",
+  "realmId" : "master",
   "roleIds" : [ "f6601958-4784-4360-b150-e8655887a5e9", "b01545d9-a897-4478-9eb0-937438c73980", "7f93281c-eec2-4f9c-91fb-680cbe486c11", "86202127-1370-493d-86fc-744eee817dd6", "a8a5fc6a-9635-49ac-a802-fdeafea00eed" ],
   "attributes" : { },
   "credentials" : [ {

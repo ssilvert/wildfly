@@ -48,8 +48,8 @@ public class DmrFailureReadinessHandler extends RealmReadinessHandler {
 
     private final String redirectTo;
 
-    public DmrFailureReadinessHandler(final SecurityRealm securityRealm, final HttpHandler next, final String redirectTo) {
-        super(securityRealm, next);
+    public DmrFailureReadinessHandler(final boolean usingKeycloak, final SecurityRealm securityRealm, final HttpHandler next, final String redirectTo) {
+        super(usingKeycloak, securityRealm, next);
         this.redirectTo = redirectTo;
     }
 

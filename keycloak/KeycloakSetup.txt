@@ -1,44 +1,24 @@
-Prepare WildFly
-1. Build the latest SNAPSHOT of Keycloak master on your local machine.  The WildFly build will use the artifacts in your local Maven repo.
-2. Build this version of WildFly
-3. Run <WILDFLY_HOME>/keycloak/kc-setup.sh and proceed with "Import the ManagementRealm and start WildFly" step
-
-If you are on Windows and can't run shell script, do it manually
-
-Add Management User
-1. Run <WILDFLY_HOME>/bin/add-user.sh.  You will need to add one Management User.  You can use any user name you want.  It will not be used by Keycloak.
-
-Copy the Keycloak Auth Server
-1. In keycloak, go to distribution/war-dist/target/unpacked/deployments
-2. Copy the contents of the deployments directory to <WILDFLY_HOME>/standalone/deployments
-
-Copy the application configs for web-console and http-endpoint
-1. Find the /keycloak directory in the root of this Wildfly fork
-2. Copy the two .json files from /keycloak/app-config to <WILDFLY_HOME>/standalone/configuration
-
-Import the ManagementRealm and start WildFly
-1. cd to <WILDFLY_HOME>/bin
-2. ./standalone.sh -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=../../../../keycloak/import
-3. Step 2 only needs to be done once.  Next time, just start the server normally.
+The Keycloak setup is now fully integrated with this POC WildFly build.  The Keycloak master relam is pre-populated with definitions for the Web Console and the http management endpoint.
 
 Login to the Web Console
 1. Go to http://localhost:9990/console/ and log in.  Other console URLs such as http://localhost:9990/console/App.html will not work until you are logged in.
-2. There is a predefined user for the ManagementRealm named "stan" with password set to "password".
+2. There is a predefined user for the master realm named "stan" with password set to "password".
 3. If you click on your user name in the upper righthand corner of web console you can see the role you were assigned.  You will only be allowed to view/change things that you have rights to view/change.
 4. You can also directly hit the http management endpoint by going to http://localhost:9990/management.  You will not need to log in again because the two applications are in the same realm. Single Signon!
 
 Login to Keycloak Admin
 1. Go to http://localhost:8080/auth/admin/index.html
-2. There is a predefined user for the keycloak-admin named "stan" with password set to "password".
+2. You don't need to log in because the Web Console and Keycloak Admin share an SSO realm.
 3. In Keycloak admin, you can view active sessions and drill down to see who is logged in.
+4. You can also view the audit log.
 
 Change a role for a Web Console user
-1. Log out of Web Console
-2. Login to Keycloak Admin
-3. Go to ManagementRealm->Users->stan->Role Mappings
-4. Select the web-console application and change the role
-5. Do the same for the http-endpoint application and change to the same role
-6. Log back into Web Console and see that the role has changed
+1. Go to Keycloak Admin
+2. Go to master->Users->stan->Role Mappings
+3. Select the web-console application and change the role
+4. Do the same for the http-endpoint application and change to the same role
+5. Log out of the realm.
+6. Log into Web Console and see that the role has changed.
 
 
 
