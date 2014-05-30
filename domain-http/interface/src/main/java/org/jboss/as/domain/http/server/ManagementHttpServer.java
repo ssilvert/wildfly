@@ -235,13 +235,13 @@ public class ManagementHttpServer {
         DomainApiCheckHandler domainApiHandler = new DomainApiCheckHandler(modelController, controlledProcessStateService);
         pathHandler.addPrefixPath("/", rootConsoleRedirectHandler);
         if (consoleHandler != null) {
-            HttpHandler readinessHandler = new RedirectReadinessHandler(securityRealm, consoleHandler.getHandler(),
+            HttpHandler readinessHandler = new RedirectReadinessHandler(true, securityRealm, consoleHandler.getHandler(),
                     ErrorContextHandler.ERROR_CONTEXT);
             pathHandler.addPrefixPath(consoleHandler.getContext(), readinessHandler);
             //pathHandler.addExactPath(consoleHandler.getContext() + "/App.html", new DebugHandler(readinessHandler));
         }
 
-        HttpHandler readinessHandler = new DmrFailureReadinessHandler(securityRealm, secureDomainAccess(domainApiHandler, securityRealm), ErrorContextHandler.ERROR_CONTEXT);
+        HttpHandler readinessHandler = new DmrFailureReadinessHandler(true, securityRealm, secureDomainAccess(domainApiHandler, securityRealm), ErrorContextHandler.ERROR_CONTEXT);
         pathHandler.addPrefixPath(DomainApiCheckHandler.PATH, readinessHandler);
         pathHandler.addExactPath("management-upload", readinessHandler);
 

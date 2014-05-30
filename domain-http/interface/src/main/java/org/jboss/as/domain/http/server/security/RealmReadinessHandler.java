@@ -44,17 +44,25 @@ import static org.jboss.as.domain.http.server.HttpServerLogger.ROOT_LOGGER;
  */
 abstract class RealmReadinessHandler implements HttpHandler {
 
+    private final boolean usingKeycloak;
     private final SecurityRealm securityRealm;
     private final HttpHandler next;
 
-    RealmReadinessHandler(final SecurityRealm securityRealm, final HttpHandler next) {
+    /**
+     * Hack!!! usingKeycloak flag keeps you from needing to run add-user.sh before starting the console.
+     * @param usingKeycloak
+     * @param securityRealm
+     * @param next
+     */
+    RealmReadinessHandler(final boolean usingKeycloak, final SecurityRealm securityRealm, final HttpHandler next) {
+        this.usingKeycloak = usingKeycloak;
         this.securityRealm = securityRealm;
         this.next = next;
     }
 
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
-        if (securityRealm == null || securityRealm.isReady() || clientCertPotentiallyPossible(exchange)) {
+        if (usingKeycloak || securityRealm == null || securityRealm.isReady() || clientCertPotentiallyPossible(exchange)) {
             next.handleRequest(exchange);
         } else {
             try {

@@ -37,8 +37,8 @@ public class RedirectReadinessHandler extends RealmReadinessHandler {
 
     private final String redirectTo;
 
-    public RedirectReadinessHandler(final SecurityRealm securityRealm, final HttpHandler next, final String redirectTo) {
-        super(securityRealm, next);
+    public RedirectReadinessHandler(final boolean usingKeycloak, final SecurityRealm securityRealm, final HttpHandler next, final String redirectTo) {
+        super(usingKeycloak, securityRealm, next);
         this.redirectTo = redirectTo;
     }
 

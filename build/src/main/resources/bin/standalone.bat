@@ -152,6 +152,11 @@ if "x%JBOSS_CONFIG_DIR%" == "x" (
   set  "JBOSS_CONFIG_DIR=%JBOSS_BASE_DIR%\configuration"
 )
 
+rem If first time run then import Keycloak master realm
+if not exist "%JBOSS_BASE_DIR%/data" (
+   set "JAVA_OPTS=-Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=../../../../keycloak/import  %JAVA_OPTS%"
+)
+
 rem Setup JBoss specific properties
 set "JAVA_OPTS=-Dprogram.name=%PROGNAME% %JAVA_OPTS%"
 

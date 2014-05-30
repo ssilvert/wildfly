@@ -1,11 +1,11 @@
 {
-  "realm": "keycloak-admin",
+  "realm": "master",
   "realm-public-key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv5Mwgs/bNKMBuzFUWskpn3f8vqdT0eVpQUQwToCZLMAtr7MF0tOuV/9/3mrop50F73aH83U/wS6ZSiADOPiczhiKJiAZo8WLxX7O6mUGRDy5IjJiUYm0m2bZdnLOTvOapnk+ijFG/BlF8kCWGh5dhG2uqEhTi1KyrKWS0K88jC/UCSKNLvYhqQdEc7XAf9+DwoMIZDtChUhP83HX8jflZXKcO89x3I/GFucIZKPcjcaVdMvnDykkLlA6IKpFCWNjB/8s7KF5SSEk9BzDJu1dC/N13GJRb7EWL5mn47o2XxiJQtHbAN2p88TRND/j0KgDZU1sAccl1kIcH2djvUaJPwIDAQAB",
   "auth-server-url": "http://localhost:8080/auth",
   "ssl-not-required": true,
-  "resource": "http-endpoint",
+  "resource": "web-console",
   "credentials": {
-    "secret": "9ea3a439-8fee-455e-abcc-4365e4171ff3"
+    "secret": "8c1a765d-e980-469c-ba3e-e588e70a061b"
   },
   "use-resource-role-mappings": true
 }
