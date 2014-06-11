@@ -74,4 +74,19 @@
   "surrogateAuthRequired" : false,
   "bearerOnly" : false,
   "defaultRoles" : [ ]
+}, {
+  "id" : "6a6fbb5c-5a6b-4949-8944-55901c172337",
+  "name" : "coregui",
+  "enabled" : true,
+  "secret" : "password",
+  "allowedClaimsMask" : 7,
+  "notBefore" : 0,
+  "publicClient" : false,
+  "realmId" : "master",
+  "webOrigins" : [ ],
+  "redirectUris" : [ "http://localhost:7080/coregui/*" ],
+  "scopeIds" : [ ],
+  "surrogateAuthRequired" : false,
+  "bearerOnly" : false,
+  "defaultRoles" : [ ]
 } ]
