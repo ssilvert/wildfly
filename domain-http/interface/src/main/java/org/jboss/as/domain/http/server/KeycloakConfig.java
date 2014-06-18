@@ -86,7 +86,7 @@ public enum KeycloakConfig {
         return "{\n" +
 "  \"realm\": \"ManagementRealm\",\n" +
 "  \"realm-public-key\": \"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCiTN5MrxKlhbRpsiic3HlWOjZDCZ87nkSm39y5E7vlBpBj5Q3VvXFxnME9KfeHpjg3cIVLdvALa5UNsNVx6N+qDY56YcjY+Zxq4lYk60eWuSk3y26dubV1WUHqcSOofB++/+rcmQevtYc1+fbr0uINHJ+kbZ7D5tYNU2qvjrPSWwIDAQAB\",\n" +
-"  \"auth-server-url\": \"http://localhost:8080/auth\",\n" +
+"  \"auth-server-url\": \"http://10.16.23.117:8080/auth\",\n" +
 "  \"ssl-not-required\": true,\n" +
 "  \"resource\": \"http-endpoint\",\n" +
 "  \"credentials\": {\n" +
@@ -100,7 +100,7 @@ public enum KeycloakConfig {
         return "{\n" +
 "  \"realm\": \"ManagementRealm\",\n" +
 "  \"realm-public-key\": \"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCiTN5MrxKlhbRpsiic3HlWOjZDCZ87nkSm39y5E7vlBpBj5Q3VvXFxnME9KfeHpjg3cIVLdvALa5UNsNVx6N+qDY56YcjY+Zxq4lYk60eWuSk3y26dubV1WUHqcSOofB++/+rcmQevtYc1+fbr0uINHJ+kbZ7D5tYNU2qvjrPSWwIDAQAB\",\n" +
-"  \"auth-server-url\": \"http://localhost:8080/auth\",\n" +
+"  \"auth-server-url\": \"http://10.16.23.117:8080/auth\",\n" +
 "  \"ssl-not-required\": true,\n" +
 "  \"resource\": \"web-console\",\n" +
 "  \"credentials\": {\n" +
