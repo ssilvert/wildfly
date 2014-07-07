@@ -460,6 +460,11 @@
         </dependency>
 
         <dependency>
+            <groupId>net.iharder</groupId>
+            <artifactId>base64</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>net.jcip</groupId>
             <artifactId>jcip-annotations</artifactId>
         </dependency>
@@ -1239,6 +1244,36 @@
             <groupId>org.jgroups</groupId>
             <artifactId>jgroups</artifactId>
         </dependency>
+
+         <dependency>
+             <groupId>org.keycloak</groupId>
+             <artifactId>keycloak-adapter-core</artifactId>
+         </dependency>
+
+         <dependency>
+             <groupId>org.keycloak</groupId>
+             <artifactId>keycloak-core</artifactId>
+         </dependency>
+
+         <dependency>
+             <groupId>org.keycloak</groupId>
+             <artifactId>keycloak-jboss-adapter-core</artifactId>
+         </dependency>
+
+         <dependency>
+             <groupId>org.keycloak</groupId>
+             <artifactId>keycloak-undertow-adapter</artifactId>
+         </dependency>
+
+         <dependency>
+             <groupId>org.keycloak</groupId>
+             <artifactId>keycloak-wildfly-adapter</artifactId>
+         </dependency>
+
+         <dependency>
+             <groupId>org.keycloak</groupId>
+             <artifactId>keycloak-wildfly-subsystem</artifactId>
+         </dependency>
 
         <dependency>
             <groupId>org.kohsuke.rngom</groupId>
