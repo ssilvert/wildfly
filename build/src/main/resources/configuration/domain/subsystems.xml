@@ -14,6 +14,7 @@
       <subsystem>jaxrs.xml</subsystem>
       <subsystem>jca.xml</subsystem>
       <subsystem>jdr.xml</subsystem>
+      <subsystem>keycloak.xml</subsystem>
       <subsystem supplement="domain">jmx.xml</subsystem>
       <subsystem>jpa.xml</subsystem>
       <subsystem>jsf.xml</subsystem>

@@ -19,6 +19,7 @@
         <subsystem>jpa.xml</subsystem>
         <subsystem>jsf.xml</subsystem>
         <subsystem>jsr77.xml</subsystem>
+        <subsystem>keycloak.xml</subsystem>
         <subsystem>mail.xml</subsystem>
         <subsystem>messaging.xml</subsystem>
         <subsystem>naming.xml</subsystem>

@@ -18,6 +18,7 @@
         <subsystem>jmx.xml</subsystem>
         <subsystem>jpa.xml</subsystem>
         <subsystem>jsf.xml</subsystem>
+        <subsystem>keycloak.xml</subsystem>
         <subsystem>mail.xml</subsystem>
         <subsystem>mod_cluster.xml</subsystem>
         <subsystem>naming.xml</subsystem>
