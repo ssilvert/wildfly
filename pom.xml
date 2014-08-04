@@ -6222,6 +6222,19 @@
 
             <dependency>
                 <groupId>org.keycloak</groupId>
+                <artifactId>keycloak-server</artifactId>
+                <version>${version.org.keycloak}</version>
+                <type>war</type>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>                    
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.keycloak</groupId>
                 <artifactId>keycloak-wildfly-subsystem</artifactId>
                 <version>${version.org.keycloak}</version>
                 <exclusions>
