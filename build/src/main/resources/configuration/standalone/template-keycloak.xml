@@ -6,6 +6,14 @@
         <?EXTENSIONS?>
     </extensions>
 
+    <!-- Keycloak properties to import initial config on first startup -->
+    <system-properties>
+        <property name="keycloak.migration.action" value="import"/>
+        <property name="keycloak.migration.strategy" value="IGNORE_EXISTING"/>
+        <property name="keycloak.migration.provider" value="singleFile"/>
+        <property name="keycloak.migration.file" value="${jboss.server.base.dir}/keycloak/init/keycloak-import.json"/>
+    </system-properties>
+
     <management>
         <security-realms>
             <security-realm name="ManagementRealm">

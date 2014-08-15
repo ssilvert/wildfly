@@ -1,0 +1,399 @@
+[ {
+  "id" : "master",
+  "realm" : "master",
+  "notBefore" : 0,
+  "accessTokenLifespan" : 60,
+  "ssoSessionIdleTimeout" : 300,
+  "ssoSessionMaxLifespan" : 36000,
+  "accessCodeLifespan" : 60,
+  "accessCodeLifespanUserAction" : 300,
+  "enabled" : true,
+  "sslRequired" : "external",
+  "passwordCredentialGrantAllowed" : false,
+  "registrationAllowed" : false,
+  "rememberMe" : false,
+  "verifyEmail" : false,
+  "resetPasswordAllowed" : false,
+  "social" : false,
+  "updateProfileOnInitialSocialLogin" : false,
+  "bruteForceProtected" : false,
+  "maxFailureWaitSeconds" : 900,
+  "minimumQuickLoginWaitSeconds" : 60,
+  "waitIncrementSeconds" : 60,
+  "quickLoginCheckMilliSeconds" : 1000,
+  "maxDeltaTimeSeconds" : 43200,
+  "failureFactor" : 30,
+  "privateKey" : "MIICXQIBAAKBgQC4siLKUew0WYxdtq6/rwk4Uj/4amGFFnE/yzIxQVU0PUqz3QBRVkUWpDj0K6ZnS5nzJV/y6DHLEy7hjZTdRDphyF1sq09aDOYnVpzu8o2sIlMM8q5RnUyEfIyUZqwo8pSZDJ90fS0s+IDUJNCSIrAKO3w1lqZDHL6E/YFHXyzkvQIDAQABAoGBAJ5Qk2G5Ny7oU1lA7imAb/bHCe51wYHC6vAzzKJLzi0pHI9wMIWH3VC7E9a4U7rXIu84ajZcsdHQb68HHUNM6HzS7S2eF2tCtVPc4mg1pWcQ7LBe2o0JC+HeC5T3eSdHATzIUy0jE+b0Kn8N075g+I+O3nYBSXhGDJnM3jRlwqpBAkEA6es2HwPYLZ7tYR6VuBjEHrX2c4ekQoRNviLgJTm2asmNO51dMQnMVte+u9gsqBlzr+5/CA7ylPvFseUTwkSTvwJBAMohbBaW24KHgZ9/7e+DI7OcNP6zRgT+tBwxCVT/GoXbzI6C1Ord2FGq5E0awYwg+dHZ9WjlpzoV3prnXq/VNoMCQD2c1J6KtrAdgkzob2sUKuQj7Yw0mBFlI80HBp8HeoLaH7cqFdfKyuW84eI8aFbGjXAzk4Yd2ctgHYxj2DZ9NaUCQQDJ7uPuGV5JJBkigIrzaj8Dk/35qp48JT1IoNCi4ozbx/+vLBOMZH9U73ZPdXiBBvytYqNi3XPYerq+ZIFbBpYDAkBJ2f/mjTJxsUJNuWAYfGOVXG/gxnc9twdSUd+S9MhLqLVTnUmi29IIJkA7m2Z5XAs+2Nfdl+fsGEk2oQqeLydH",
+  "publicKey" : "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC4siLKUew0WYxdtq6/rwk4Uj/4amGFFnE/yzIxQVU0PUqz3QBRVkUWpDj0K6ZnS5nzJV/y6DHLEy7hjZTdRDphyF1sq09aDOYnVpzu8o2sIlMM8q5RnUyEfIyUZqwo8pSZDJ90fS0s+IDUJNCSIrAKO3w1lqZDHL6E/YFHXyzkvQIDAQAB",
+  "roles" : {
+    "realm" : [ {
+      "id" : "9635139f-e54c-46ab-b43a-7d6da25f0df7",
+      "name" : "create-realm",
+      "composite" : false
+    }, {
+      "id" : "44da81f7-ef19-4042-84ba-a519c5fcd352",
+      "name" : "admin",
+      "composite" : true,
+      "composites" : {
+        "realm" : [ "create-realm" ],
+        "application" : {
+          "master-realm" : [ "manage-audit", "manage-clients", "manage-applications", "view-users", "manage-realm", "view-audit", "manage-users", "view-applications", "view-realm", "view-clients" ]
+        }
+      }
+    } ],
+    "application" : {
+      "http-endpoint" : [ {
+        "id" : "ae92ad49-76ed-46be-a661-5342c5e42c20",
+        "name" : "Auditor",
+        "description" : "All permissions of Monitor.\nView and modify resources to administrative audit logging system.\nCannot modify sensitive resources or data outside auditing, can read any sensitive data.",
+        "composite" : true,
+        "composites" : {
+          "application" : {
+            "web-console" : [ "Auditor" ]
+          }
+        }
+      }, {
+        "id" : "a2e437f2-f6b2-403f-a82c-ea0cacd8d1bc",
+        "name" : "Operator",
+        "description" : "All permissions of Monitor.\nCan modify the runtime state, e.g. reload or shutdown the server, pause/resume JMS destination, flush database connection pool.\nDoes not have permission to modify persistent state.",
+        "composite" : true,
+        "composites" : {
+          "application" : {
+            "web-console" : [ "Operator" ]
+          }
+        }
+      }, {
+        "id" : "36c78ba9-fad7-4145-82a2-e5ad172532ca",
+        "name" : "Administrator",
+        "description" : "All permissions of Maintainer.\nView and modify sensitive data such as access control system.\nNo access to administrative audit logging system.",
+        "composite" : true,
+        "composites" : {
+          "application" : {
+            "web-console" : [ "Administrator" ]
+          }
+        }
+      }, {
+        "id" : "ffea62e3-be92-4c20-a45f-7e23d7549741",
+        "name" : "Deployer",
+        "description" : "All permissions of Maintainer.\nPermission is restricted to applications only, cannot make changes to container configuration.",
+        "composite" : true,
+        "composites" : {
+          "application" : {
+            "web-console" : [ "Deployer" ]
+          }
+        }
+      }, {
+        "id" : "696f4424-f440-4e54-881e-95bf479a434e",
+        "name" : "Maintainer",
+        "description" : "All permissions of Operator.\nCan modify the persistent state, e.g. deploy an application, setting up new data sources, add a JMS destination.",
+        "composite" : true,
+        "composites" : {
+          "application" : {
+            "web-console" : [ "Maintainer" ]
+          }
+        }
+      }, {
+        "id" : "47630483-4e9a-4e31-95ef-8a91bf8c9e83",
+        "name" : "SuperUser",
+        "description" : "Has all the permissions.",
+        "composite" : true,
+        "composites" : {
+          "application" : {
+            "web-console" : [ "SuperUser" ]
+          }
+        }
+      }, {
+        "id" : "f776872e-ec37-47e3-8ed4-c5db6db3b9f7",
+        "name" : "Monitor",
+        "description" : "Has the fewest permissions.\nOnly read configuration and current runtime state.\nNo access to sensitive resources or data or audit logging resources.",
+        "composite" : true,
+        "composites" : {
+          "application" : {
+            "web-console" : [ "Monitor" ]
+          }
+        }
+      } ],
+      "security-admin-console" : [ ],
+      "master-realm" : [ {
+        "id" : "4f722ea5-52c4-4cd5-a004-b158b2c9915a",
+        "name" : "manage-audit",
+        "composite" : false
+      }, {
+        "id" : "c158bf08-3898-4c96-ae7c-fb9e8a3de464",
+        "name" : "manage-clients",
+        "composite" : false
+      }, {
+        "id" : "f519681f-e983-45c2-b8f1-24b4ff07fa1f",
+        "name" : "manage-applications",
+        "composite" : false
+      }, {
+        "id" : "bc7ae0d2-de61-4bd7-820e-f1af5cc8df71",
+        "name" : "view-users",
+        "composite" : false
+      }, {
+        "id" : "eff0e97d-97c6-4141-99cc-ba9f7178f05b",
+        "name" : "manage-realm",
+        "composite" : false
+      }, {
+        "id" : "b887e63e-d2da-4551-a3fb-d106b6bd1145",
+        "name" : "view-audit",
+        "composite" : false
+      }, {
+        "id" : "def47a66-17ee-42cf-90eb-cb78f672d4e6",
+        "name" : "manage-users",
+        "composite" : false
+      }, {
+        "id" : "3a0f31be-b313-4cc6-8cb1-0fdda2834051",
+        "name" : "view-applications",
+        "composite" : false
+      }, {
+        "id" : "d86a8a0f-4bce-4e1b-b189-4ad94a41ed15",
+        "name" : "view-realm",
+        "composite" : false
+      }, {
+        "id" : "57775702-7a97-42c6-be2a-13c48520da5d",
+        "name" : "view-clients",
+        "composite" : false
+      } ],
+      "account" : [ {
+        "id" : "c50e90b8-c90c-4b32-8de8-382c7727e2aa",
+        "name" : "view-profile",
+        "composite" : false
+      }, {
+        "id" : "ea9f0f60-20a3-4483-a24c-aade404b68e5",
+        "name" : "manage-account",
+        "composite" : false
+      } ],
+      "web-console" : [ {
+        "id" : "af087335-718e-41f4-b890-f7b4382aed7a",
+        "name" : "Administrator",
+        "description" : "All permissions of Maintainer.\nView and modify sensitive data such as access control system.\nNo access to administrative audit logging system.",
+        "composite" : true,
+        "composites" : {
+          "application" : {
+            "http-endpoint" : [ "Administrator" ]
+          }
+        }
+      }, {
+        "id" : "13fed714-852d-4f4e-b386-6d9115212cf6",
+        "name" : "Deployer",
+        "description" : "All permissions of Maintainer.\nPermission is restricted to applications only, cannot make changes to container configuration.",
+        "composite" : true,
+        "composites" : {
+          "application" : {
+            "http-endpoint" : [ "Deployer" ]
+          }
+        }
+      }, {
+        "id" : "69c33fc3-fe37-4c1a-a3bb-71e0130429e5",
+        "name" : "Monitor",
+        "description" : "Has the fewest permissions.\nOnly read configuration and current runtime state.\nNo access to sensitive resources or data or audit logging resources.",
+        "composite" : true,
+        "composites" : {
+          "application" : {
+            "http-endpoint" : [ "Monitor" ]
+          }
+        }
+      }, {
+        "id" : "835f33e6-f4cd-47a7-b0b4-b024b5c7a670",
+        "name" : "SuperUser",
+        "description" : "Has all the permissions.",
+        "composite" : true,
+        "composites" : {
+          "application" : {
+            "http-endpoint" : [ "SuperUser" ]
+          }
+        }
+      }, {
+        "id" : "0168881b-b7f0-452e-bfe2-a26e1068af76",
+        "name" : "Operator",
+        "description" : "All permissions of Monitor.\nCan modify the runtime state, e.g. reload or shutdown the server, pause/resume JMS destination, flush database connection pool.\nDoes not have permission to modify persistent state.",
+        "composite" : true,
+        "composites" : {
+          "application" : {
+            "http-endpoint" : [ "Operator" ]
+          }
+        }
+      }, {
+        "id" : "3381a373-ca0d-436f-852e-8513c780561e",
+        "name" : "Maintainer",
+        "description" : "All permissions of Operator.\nCan modify the persistent state, e.g. deploy an application, setting up new data sources, add a JMS destination.",
+        "composite" : true,
+        "composites" : {
+          "application" : {
+            "http-endpoint" : [ "Maintainer" ]
+          }
+        }
+      }, {
+        "id" : "fcd110c7-caa8-48a9-9b82-e90788b7ed22",
+        "name" : "Auditor",
+        "description" : "All permissions of Monitor.\nView and modify resources to administrative audit logging system.\nCannot modify sensitive resources or data outside auditing, can read any sensitive data.",
+        "composite" : true,
+        "composites" : {
+          "application" : {
+            "http-endpoint" : [ "Auditor" ]
+          }
+        }
+      } ]
+    }
+  },
+  "requiredCredentials" : [ "password" ],
+  "users" : [ {
+    "id" : "7f027473-592e-486b-baba-6fbf5b58102f",
+    "username" : "admin",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "credentials" : [ {
+      "type" : "password",
+      "hashedSaltedValue" : "vWRuV5bI18Om9rielk1mmlHTFCB+muKkXDdxSUkzgGjC7AfVzjwDEo0ilOnFGNo+pIyTWT3qCRuESkiYtOQHJg==",
+      "salt" : "ej27jYydSG4NFjqbVbBKmw==",
+      "hashIterations" : 1,
+      "temporary" : false
+    } ],
+    "requiredActions" : [ "UPDATE_PASSWORD" ],
+    "realmRoles" : [ "admin" ],
+    "applicationRoles" : {
+      "account" : [ "view-profile", "manage-account" ],
+      "web-console" : [ "SuperUser" ]
+    }
+  } ],
+  "scopeMappings" : [ {
+    "client" : "security-admin-console",
+    "roles" : [ "admin" ]
+  } ],
+  "applications" : [ {
+    "id" : "7cfe4b6a-4696-4498-a894-10ac408ef21c",
+    "name" : "master-realm",
+    "surrogateAuthRequired" : false,
+    "enabled" : true,
+    "secret" : "6cea9332-0218-4fa9-8be3-da781cd8aaae",
+    "redirectUris" : [ ],
+    "webOrigins" : [ ],
+    "claims" : {
+      "name" : true,
+      "username" : true,
+      "profile" : true,
+      "picture" : true,
+      "website" : true,
+      "email" : true,
+      "gender" : true,
+      "locale" : true,
+      "address" : true,
+      "phone" : true
+    },
+    "notBefore" : 0,
+    "bearerOnly" : true,
+    "publicClient" : false,
+    "fullScopeAllowed" : true
+  }, {
+    "id" : "2b233b96-9ad5-4583-9927-916c0e5fbd78",
+    "name" : "account",
+    "baseUrl" : "/auth/realms/master/account",
+    "surrogateAuthRequired" : false,
+    "enabled" : true,
+    "secret" : "d84c89ab-13a0-41a8-93ee-cfc44c687f02",
+    "defaultRoles" : [ "view-profile", "manage-account" ],
+    "redirectUris" : [ "/auth/realms/master/account/*" ],
+    "webOrigins" : [ ],
+    "claims" : {
+      "name" : true,
+      "username" : true,
+      "profile" : true,
+      "picture" : true,
+      "website" : true,
+      "email" : true,
+      "gender" : true,
+      "locale" : true,
+      "address" : true,
+      "phone" : true
+    },
+    "notBefore" : 0,
+    "bearerOnly" : false,
+    "publicClient" : false,
+    "fullScopeAllowed" : false
+  }, {
+    "id" : "94110b78-b5c7-4abe-8a04-645f755a2133",
+    "name" : "security-admin-console",
+    "baseUrl" : "/auth/admin/master/console/index.html",
+    "surrogateAuthRequired" : false,
+    "enabled" : true,
+    "secret" : "6aa7db47-1179-4653-b085-89432e3b0152",
+    "redirectUris" : [ "/auth/admin/master/console/*" ],
+    "webOrigins" : [ ],
+    "claims" : {
+      "name" : true,
+      "username" : true,
+      "profile" : true,
+      "picture" : true,
+      "website" : true,
+      "email" : true,
+      "gender" : true,
+      "locale" : true,
+      "address" : true,
+      "phone" : true
+    },
+    "notBefore" : 0,
+    "bearerOnly" : false,
+    "publicClient" : true,
+    "fullScopeAllowed" : false
+  }, {
+    "id" : "3814b31f-7a9c-4f60-be3f-bb07f6620c06",
+    "name" : "http-endpoint",
+    "surrogateAuthRequired" : false,
+    "enabled" : true,
+    "secret" : "2769a4a2-5be0-454f-838f-f33b7755b667",
+    "redirectUris" : [ "http://localhost:9990/management/*" ],
+    "webOrigins" : [ "http://localhost:9990" ],
+    "claims" : {
+      "name" : true,
+      "username" : true,
+      "profile" : true,
+      "picture" : true,
+      "website" : true,
+      "email" : true,
+      "gender" : true,
+      "locale" : true,
+      "address" : true,
+      "phone" : true
+    },
+    "notBefore" : 0,
+    "bearerOnly" : false,
+    "publicClient" : false,
+    "fullScopeAllowed" : true
+  }, {
+    "id" : "485925ea-b28b-4918-a5de-e7d853a50a3d",
+    "name" : "web-console",
+    "surrogateAuthRequired" : false,
+    "enabled" : true,
+    "secret" : "0aa31d98-e0aa-404c-b6e0-e771dba1e798",
+    "redirectUris" : [ "http://localhost:9990/console/*" ],
+    "webOrigins" : [ "http://localhost:9990" ],
+    "claims" : {
+      "name" : true,
+      "username" : true,
+      "profile" : true,
+      "picture" : true,
+      "website" : true,
+      "email" : true,
+      "gender" : true,
+      "locale" : true,
+      "address" : true,
+      "phone" : true
+    },
+    "notBefore" : 0,
+    "bearerOnly" : false,
+    "publicClient" : false,
+    "fullScopeAllowed" : true
+  } ],
+  "oauthClients" : [ ],
+  "browserSecurityHeaders" : {
+    "contentSecurityPolicy" : "frame-src 'self'",
+    "xFrameOptions" : "SAMEORIGIN"
+  },
+  "socialProviders" : { },
+  "smtpServer" : { },
+  "auditEnabled" : false,
+  "auditExpiration" : 0,
+  "auditListeners" : [ "jboss-logging" ]
+} ]

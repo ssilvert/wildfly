@@ -240,7 +240,7 @@
         <version.org.jboss.xnio.xnio-nio>${version.org.jboss.xnio}</version.org.jboss.xnio.xnio-nio>
         <version.org.jgroups>3.4.5.Final</version.org.jgroups>
         <version.org.jipijapa>1.0.1.Final</version.org.jipijapa>
-        <version.org.keycloak>1.0-beta-4-SNAPSHOT</version.org.keycloak>
+        <version.org.keycloak>1.0-rc-1-SNAPSHOT</version.org.keycloak>
         <version.org.kohsuke.rngom>201103.jboss-1</version.org.kohsuke.rngom>
         <version.org.mockito>1.9.5</version.org.mockito>
         <version.org.opensaml.opensaml>2.5.3</version.org.opensaml.opensaml>
@@ -258,7 +258,7 @@
         <version.org.testng>6.1.1</version.org.testng>
         <version.org.wildfly.checkstyle-config>1.0.0.Final</version.org.wildfly.checkstyle-config>
         <version.org.wildfly.security.manager>1.0.0.Final</version.org.wildfly.security.manager>
-        <version.org.wildfly.core>1.0.0.Alpha4</version.org.wildfly.core>
+        <version.org.wildfly.core>1.0.0.Alpha5-SNAPSHOT</version.org.wildfly.core>
         <version.org.wildfly.arquillian>1.0.0.Alpha1</version.org.wildfly.arquillian>
         <version.org.yaml.snakeyaml>1.13</version.org.yaml.snakeyaml>
         <version.sun.jaxb>2.2.5.jboss-2</version.sun.jaxb>
